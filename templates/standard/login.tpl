@@ -12,7 +12,7 @@
 
 					<div class="row">
 						<label for="username" class="username"></label>
-						<input type="text" class="text" name="username" id="username" required = "1" realname = "{#name#}" />
+						<input type="text" class="text" name="username" id="username" realname = "{#name#}" />
 					</div>
 
 					<div class="row">

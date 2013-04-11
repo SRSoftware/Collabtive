@@ -1,5 +1,5 @@
 <?php
-error_reporting(0);
+error_reporting(1);
 require("./init.php");
 // 0.7
 $conn->query("ALTER TABLE `files` CHANGE `type` `type` VARCHAR( 255 )");
@@ -7,6 +7,9 @@ $conn->query("ALTER TABLE `files` CHANGE `type` `type` VARCHAR( 255 )");
 if ($settings["template"] == "frost") {
     $conn->query("UPDATE `settings` SET `template` = 'winter'");
 }
+
+// openid
+$conn->query("CREATE TABLE `openids` (  `identity` VARCHAR(150) NOT NULL PRIMARY KEY,  `ID` int(10) NOT NULL) ENGINE=MyISAM");
 // 1.0
 function getOldSettings()
 {
@@ -87,10 +90,4 @@ $opt17 = $conn->query("OPTIMIZE TABLE `user`");
 
 $template->display("update.tpl");
 
-// openid
-$table21 = $conn->query("
-CREATE TABLE `openids` (
-  `identity` VARCHAR(150) NOT NULL PRIMARY KEY,
-  `ID` int(10) NOT NULL
-) ENGINE=MyISAM");
 ?>

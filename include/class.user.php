@@ -70,7 +70,7 @@ class user {
      * @param string $openid Openid URL
      * @return bool
      */
-    function edit($id, $name, $realname, $email, $tel1, $tel2, $company, $zip, $gender, $url, $address1, $address2, $state, $country, $tags, $locale, $avatar = "", $rate = 0.0, $openid)
+    function edit($id, $name, $realname, $email, $tel1, $tel2, $company, $zip, $gender, $url, $address1, $address2, $state, $country, $tags, $locale, $avatar = "", $rate = 0.0, $openid=null)
     {
         global $conn;
         $rate = (float) $rate;
