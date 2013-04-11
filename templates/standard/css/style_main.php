@@ -1299,13 +1299,18 @@ body a.butn_link, body a.butn_link_active {
 .message-in ul
 {
 padding-left;
+
 }
+
 message-in li
 {
 list-style-type: disc;
 padding: 0;
 }
-
+.message-in ul, .descript ul {
+list-style-type: disc;
+padding-left: 40px;
+}
 .message-in img {
 	height: auto;
 }
@@ -2730,7 +2735,16 @@ a.tool_edit, a.tool_del {
 	margin-right: 4px;
 	background: url(../images/butn-edit.png) no-repeat 0 4px;
 }
+a.tool_edit_active
+{
+	display: block;
+	width: 14px;
+	height: 23px;
+	float: left;
+	margin-right: 4px;
+	background: url(../images/butn-edit.png) no-repeat 0 -22px;
 
+}
 a.tool_del {
 	background-image: url(../images/butn-del.png);
 	margin: 0;

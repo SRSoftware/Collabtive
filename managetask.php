@@ -24,7 +24,6 @@ $id = getArrayVal($_GET, "id");
 $project = array();
 $project['ID'] = $id;
 $template->assign("project", $project);
-
 // define the active tab in the project navigation
 $classes = array("overview" => "overview", "msgs" => "msgs", "tasks" => "tasks_active", "miles" => "miles", "files" => "files", "users" => "users", "tracker" => "tracking");
 $template->assign("classes", $classes);
@@ -115,6 +114,7 @@ if ($action == "addform") {
     $thistask['userid'] = $user[0];
 
     $tmp = $task->getUsers($thistask['ID']);
+
     if ($tmp) {
         foreach ($tmp as $value) {
             $thistask['users'][] = $value[0];
@@ -257,6 +257,13 @@ if ($action == "addform") {
         $template->assign("deassigntask", 0);
     }
 } elseif ($action == "showproject") {
+    if (!$userpermissions["tasks"]["view"]) {
+        $errtxt = $langfile["nopermission"];
+        $noperm = $langfile["accessdenied"];
+        $template->assign("errortext", "$errtxt<br>$noperm");
+        $template->display("error.tpl");
+        die();
+    }
     if (!chkproject($userid, $id)) {
         $errtxt = $langfile["notyourproject"];
         $noperm = $langfile["accessdenied"];
@@ -271,7 +278,7 @@ if ($action == "addform") {
     $myproject = new project();
     $project_members = $myproject->getProjectMembers($id, $myproject->countMembers($id));
 
-    $milestone = new milestone;
+    $milestone = new milestone();
     $milestones = $milestone->getAllProjectMilestones($id);
 
     $pro = $myproject->getProject($id);
@@ -287,6 +294,13 @@ if ($action == "addform") {
     $template->assign("oldlists", $oldlists);
     $template->display("projecttasks.tpl");
 } elseif ($action == "showtask") {
+    if (!$userpermissions["tasks"]["view"]) {
+        $errtxt = $langfile["nopermission"];
+        $noperm = $langfile["accessdenied"];
+        $template->assign("errortext", "$errtxt<br>$noperm");
+        $template->display("error.tpl");
+        die();
+    }
     if (!chkproject($userid, $id)) {
         $errtxt = $langfile["notyourproject"];
         $noperm = $langfile["accessdenied"];

@@ -8,11 +8,11 @@ session_start();
 define("CL_ROOT", realpath(dirname(__FILE__)));
 // configuration to load
 define("CL_CONFIG", "standard");
-// collabtive version
+// collabtive version and release date
 define("CL_VERSION", 1.0);
-define("CL_PUBDATE","1351724400");
+define("CL_PUBDATE","1365026400");
 // uncomment for debugging
-error_reporting(E_ALL | E_STRICT);
+//error_reporting(E_ALL | E_STRICT);
 // include config file , pagination and global functions
 require(CL_ROOT . "/config/" . CL_CONFIG . "/config.php");
 require(CL_ROOT . "/include/SmartyPaginate.class.php");
@@ -20,8 +20,8 @@ require(CL_ROOT . "/include/initfunctions.php");
 // Start database connection
 if (!empty($db_name) and !empty($db_user))
 {
-  //  $tdb = new datenbank();
-    $conn = new PDO("mysql:host=$db_host;dbname=$db_name", $db_user, $db_pass);
+  //$tdb = new datenbank();
+    $conn = new PDO("mysql:host=$db_host;dbname=$db_name;charset=utf8", $db_user, $db_pass);
     $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_WARNING);
 }
 
@@ -33,7 +33,7 @@ $languages = getAvailableLanguages();
 $url = getMyUrl();
 $template->assign("url", $url);
 $template->assign("languages", $languages);
-$template->assign("myversion", "0.7.6");
+$template->assign("myversion", "1.0");
 $template->assign("cl_config", CL_CONFIG);
 // Assign globals to all templates
 if (isset($_SESSION["userid"]))

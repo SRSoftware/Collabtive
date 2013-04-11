@@ -11,14 +11,14 @@
 							</div>
 						</td>
 						<td class="thumb">
-							<a href = "javascript:change('manageajax.php?action=fileview&id={$project.ID}&folder={$folders[fold].ID}','filescontent');">
+							<a href = "javascript:change('manageajax.php?action=fileview&id={$project.ID}&folder={$folders[fold].ID}','filescontent');selectFolder({$folders[fold].ID});">
 								<img src="./templates/standard/images/symbols/folder-sub.png" alt="" />
 							</a>
 						</td>
 						<td class="rightmen" valign="top">
 							<div class="inmenue">
 							{if $userpermissions.files.del}
-							<a class="del" href="javascript:confirmfunction('{$langfile.confirmdel}','deleteElement(\'fdli_{$folders[fold].ID}\',\'managefile.php?action=delfolder&amp;id={$project.ID}&amp;folder={$folders[fold].ID}&ajax=1\')');fadeToggle('fdli_{$folders[fold].ID}');" title="{#delete#}" onclick=""></a>
+							<a class="del" href="javascript:confirmfunction('{$langfile.confirmdel}','deleteElement(\'fdli_{$folders[fold].ID}\',\'managefile.php?action=delfolder&amp;id={$project.ID}&amp;folder={$folders[fold].ID}&ajax=1\')');" title="{#delete#}" onclick=""></a>
 							{/if}
 							</div>
 						</td>
@@ -26,7 +26,7 @@
 					<tr>
 						<td colspan="3">
 							<span class="name">
-								<a href = "javascript:change('manageajax.php?action=fileview&id={$project.ID}&folder={$folders[fold].ID}','filescontent');"{if $myprojects[project].messages[message].files[file].imgfile == 1} rel="lytebox[img{$myprojects[project].messages[message].ID}]" {elseif $myprojects[project].messages[message].files[file].imgfile == 2} rel = "lyteframe[text{$myprojects[project].messages[message].ID}]"{/if} title="{$myprojects[project].messages[message].files[file].name}">
+								<a href = "javascript:change('manageajax.php?action=fileview&id={$project.ID}&folder={$folders[fold].ID}','filescontent');selectFolder({$folders[fold].ID});"  title="{$myprojects[project].messages[message].files[file].name}">
 									{if $folders[fold].name != ""}
 									{$folders[fold].name|truncate:14:"...":true}
 									{else}
@@ -132,5 +132,5 @@
 	{/if}
 	$('filenum').innerHTML = '{$filenum}';
 	new LyteBox();
-	$('dirUp').href = "javascript:change('manageajax.php?action=fileview&id={$project.ID}&folder={$folderid}','filescontent');"
+	$('dirUp').href = "javascript:change('manageajax.php?action=fileview&id={$project.ID}&folder={$folderid}','filescontent');selectFolder({$folderid});"
 </script>

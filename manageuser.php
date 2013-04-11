@@ -91,6 +91,7 @@ if ($action == "loginerror") {
     // Login Error
     else {
         $template->assign("loginerror", 1);
+		$template->assign("mailnotify", $settings["mailnotify"]);
         $template->display("login.tpl");
     }
 } elseif ($action == "logout") {
@@ -104,16 +105,17 @@ if ($action == "loginerror") {
 } elseif ($action == "editform") {
     $languages_fin = array();
     foreach($languages as $lang) {
-        $lang2 = $langfile[$lang];
         $fin = countLanguageStrings($lang);
 
-        if (!empty($lang2)) {
-            $lang2 .= " (" . $fin . "%)";
-            $fin = array("val" => $lang, "str" => $lang2);
-        } else {
-            $lang2 = $lang . " (" . $fin . "%)";
-            $fin = array("val" => $lang, "str" => $lang2);
-        }
+    	if (!($langfile[$lang] == "")) {
+        	$lang2 = $langfile[$lang];
+		} else {
+			$lang2 = $lang;
+		}
+
+        $lang2 .= " (" . $fin . "%)";
+        $fin = array("val" => $lang, "str" => $lang2);
+        
         array_push($languages_fin, $fin);
     }
     $template->assign("languages_fin", $languages_fin);

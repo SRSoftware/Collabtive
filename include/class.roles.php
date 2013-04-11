@@ -19,14 +19,15 @@ class roles {
      * This method takes an array with permissions, serializes it to string, and saves it to the Database
      *
      * @param string $name Name of the role (for display)
+     * @param array $projects Role permissions for projects
      * @param array $tasks Role permissions for tasks
      * @param array $milestones Role permissions for milestones
+     * @param array $customers Role permissions for customers
      * @param array $messages Role permissions for messages
      * @param array $files Role permissions for files
      * @param array $timetracker Role permissions for timetracker
      * @param array $admin
      * @param array $chat
-     * @param array $files Role permissions for admin area
      * @return bool
      */
     function add($name, array $projects, array $tasks, array $milestones, array $messages, array $files, array $timetracker, array $chat, array $admin)
@@ -59,13 +60,15 @@ class roles {
      *
      * @param int $id ID of the role to edit
      * @param string $name Name of the role (for display)
+     * @param array $projects Role permissions for projects
      * @param array $tasks Role permissions for tasks
      * @param array $milestones Role permissions for milestones
+     * @param array $customers Role permissions for customers
      * @param array $messages Role permissions for messages
      * @param array $files Role permissions for files
      * @param array $timetracker Role permissions for timetracker
+     * @param array $chat
      * @param array $admin
-     * @param array $files Role permissions for admin area
      * @return bool
      */
     function edit($id, $name, array $projects, array $tasks, array $milestones, array $messages, array $files, array $timetracker, array $chat, array $admin)
@@ -82,7 +85,7 @@ class roles {
         $admin = serialize($admin);
 
         $updStmt = $conn->prepare("UPDATE roles SET name=?,projects=?,tasks=?,milestones=?,messages=?,files=?,timetracker=?,chat=?,admin=? WHERE ID = ?");
-        $upd = $updStmt->execute(array($name, $projects, $tasts, $milestone, $messages, $files, $timetracker, $chat, $admin, $id));
+        $upd = $updStmt->execute(array($name, $projects, $tasks, $milestones, $messages, $files, $timetracker, $chat, $admin, $id));
 
         if ($upd) {
             return true;
@@ -270,6 +273,9 @@ class roles {
         }
         if (empty($inarr["read"])) {
             $inarr["read"] = 0;
+        }
+        if (empty($inarr["view"])) {
+            $inarr["view"] = 0;
         }
 
         return (array) $inarr;

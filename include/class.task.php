@@ -80,7 +80,7 @@ class task {
 
         $end = strtotime($end);
 
-        $upd = $conn->prepare("UPDATE tasks SET `end`=?,`title`=?, `text`=?, `liste`=? WHERE ID = ?");
+        $updStmt = $conn->prepare("UPDATE tasks SET `end`=?,`title`=?, `text`=?, `liste`=? WHERE ID = ?");
         $conn->query("DELETE FROM tasks_assigned WHERE `task` = $id");
         $upd = $updStmt->execute(array($end, $title, $text, $liste, $id));
 
@@ -552,9 +552,10 @@ class task {
         $id = (int) $id;
 
         $sql = $conn->query("SELECT user FROM tasks_assigned WHERE task = $id");
-        if ($sql->fetchColumn() > 0) {
+
             $result = array();
             while ($user = $sql->fetch()) {
+
                 $sel2 = $conn->query("SELECT name FROM user WHERE ID = $user[0]");
                 $uname = $sel2->fetch();
                 $uname = $uname[0];
@@ -563,9 +564,7 @@ class task {
                 $result[] = $user;
             }
             return $result;
-        } else {
-            return false;
-        }
+
     }
 
     /**

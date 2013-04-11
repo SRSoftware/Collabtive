@@ -27,6 +27,7 @@ class project {
      * @param string $name Name des Projekts
      * @param string $desc Projektbeschreibung
      * @param string $end Date on which the project is due
+     * @param int $customerID
      * @param int $assignme Assign yourself to the project
      * @return int $insid ID des neu angelegten Projekts
      */
@@ -96,6 +97,7 @@ class project {
      * @param string $name Name des Projekts
      * @param string $desc Beschreibungstext
      * @param string $end Date on which the project is due
+     * @param int $customerID id of a customer
      * @return bool
      */
     function edit($id, $name, $desc, $end, $budget)
@@ -111,9 +113,8 @@ class project {
         if ($upd) {
             $this->mylog->add($name, 'projekt' , 2, $id);
             return true;
-        } else {
+        } else
             return false;
-        }
     }
 
     /**
@@ -319,7 +320,7 @@ class project {
         $sel = $conn->prepare("SELECT * FROM projekte WHERE ID = ?");
         $selStmt = $sel->execute(array($id));
 
-		$project = $sel->fetch();
+        $project = $sel->fetch();
 
         if (!empty($project)) {
             if ($project["end"]) {
@@ -361,7 +362,7 @@ class project {
         $projekte = array();
 
         $sel = $conn->prepare("SELECT `ID` FROM projekte WHERE `status`= ? ORDER BY `end` ASC LIMIT $lim");
-		$selStmt = $sel->execute(array($status));
+        $selStmt = $sel->execute(array($status));
 
         while ($projekt = $sel->fetch()) {
             $project = $this->getProject($projekt["ID"]);
@@ -531,7 +532,7 @@ class project {
         $project = (int) $project;
 
         $sel = $conn->prepare("SELECT * FROM projectfolders WHERE project = ?");
-		$selStmt = $sel->execute(array($project));
+        $selStmt = $sel->execute(array($project));
 
         $folders = array();
         while ($folder = $sel->fetch()) {
@@ -557,8 +558,6 @@ class project {
         $diff = $end - $start;
         return floor($diff / 86400);
     }
-
-
 }
 
 ?>

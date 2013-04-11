@@ -7,6 +7,7 @@ if (!isset($_SESSION['userid'])) {
 }
 
 $project = (object) new project();
+$company = (object) new company();
 
 $action = getArrayVal($_GET, "action");
 $redir = getArrayVal($_GET, "redir");
@@ -20,6 +21,7 @@ $status = getArrayVal($_POST, "status");
 $user = getArrayVal($_POST, "user");
 $assign = getArrayVal($_POST, "assginme");
 $budget = getArrayVal($_POST, "budget");
+$customerID = getArrayVal($_POST, "customerlist");
 
 $projectid = array();
 $projectid['ID'] = $id;
@@ -59,6 +61,7 @@ if ($action == "editform") {
         $template->display("error.tpl");
         die();
     }
+
     $thisproject = $project->getProject($id);
     $title = $langfile["editproject"];
 
@@ -66,6 +69,7 @@ if ($action == "editform") {
     $template->assign("project", $thisproject);
     $template->assign("showhtml", "no");
     $template->assign("showheader", "no");
+    $template->assign("projectov", "yes");
     $template->assign("async", "yes");
     $template->display("editform.tpl");
 } elseif ($action == "edit") {
@@ -282,7 +286,7 @@ if ($action == "editform") {
     $thelog = new mylog();
     $datlog = array();
     $tlog = $thelog->getProjectLog($id, 100000);
-    $tlog = $thelog->formatdate($tlog, "d.m.y");
+    $tlog = $thelog->formatdate($tlog, CL_DATEFORMAT);
     if (!empty($tlog)) {
         foreach($tlog as $logged) {
             if ($logged["type"] == "datei") {
@@ -361,6 +365,8 @@ if ($action == "editform") {
     $template->assign("trackbar", $trackbar);
     $template->assign("logbar", $logbar);
     $template->assign("statbar", $statbar);
+    $template->assign("projectov", "no");
+
     $milestone = (object) new milestone();
     $mylog = (object) new mylog();
     $task = new task();
@@ -369,6 +375,7 @@ if ($action == "editform") {
 
     $log = $mylog->getProjectLog($id);
     $log = $mylog->formatdate($log);
+
 
     $tproject = $project->getProject($id);
     $done = $project->getProgress($id);
@@ -383,6 +390,7 @@ if ($action == "editform") {
     $title = $langfile['project'];
     $title = $title . " " . $tproject["name"];
     $template->assign("title", $title);
+
 
     $template->assign("project", $tproject);
     $template->assign("done", $done);
@@ -453,4 +461,14 @@ if ($action == "editform") {
     $template->assign("weeks", $weeks);
     $template->assign("id", $id);
     $template->display("calbody_project.tpl");
+}
+elseif($action == "tasklists")
+{
+	$listObj = new tasklist();
+	$theLists = $listObj->getProjectTasklists($id);
+	echo "<option value=\"-1\" selected=\"selected\">$langfile[chooseone]</option>";
+	foreach($theLists as $list)
+	{
+		echo "<option value = \"$list[ID]\">$list[name]</option>";
+	}
 }

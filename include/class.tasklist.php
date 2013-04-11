@@ -2,10 +2,10 @@
 /**
  * This class provides methods to realize tasklists
  *
- * @author Open Dynamics <info@o-dyn.de>
+ * @author Philipp Kiszka <info@o-dyn.de>
  * @package Collabtive
  * @name tasklist
- * @version 0.4.5
+ * @version 1.0
  * @link http://www.o-dyn.de
  * @license http://opensource.org/licenses/gpl-license.php GNU General Public License v3 or later
  */
@@ -61,7 +61,7 @@ class tasklist {
         global $conn;
 
         $updStmt = $conn->prepare("UPDATE tasklist SET `name` = ?, `desc` = ?, `milestone` = ? WHERE ID = ?");
-        $upd = $updStmt->execute(array($name, $desc, §milestone, $id));
+        $upd = $updStmt->execute(array($name, $desc, $milestone, $id));
         if ($upd) {
             $proj = $conn->query("SELECT project FROM tasklist WHERE ID = $id")->fetch();
             $proj = $proj[0];

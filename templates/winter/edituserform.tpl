@@ -1,6 +1,6 @@
 {include file="header.tpl" jsload = "ajax"}
-
 {include file="tabsmenue-user.tpl" edittab = "active"}
+
 <div id="content-left">
 <div id="content-left-in">
 <div class="user">
@@ -62,7 +62,7 @@
 								<input type="file" class="file" name = "userfile" id="avatar"  realname="{#file#}" size="19" onchange = "file_{$myprojects[project].ID}.value = this.value;"  tabindex="2" />
 								<table class = "faux" cellpadding="0" cellspacing="0" border="0">
 									<tr>
-									<td><input type="text" class="text-file" name = "file-$myprojects[project].ID" id="file_{$myprojects[project].ID}"></td>
+									<td><input type="text" class="text-file" name = "file-{$myprojects[project].ID}" id="file_{$myprojects[project].ID}"></td>
 									<td class="choose"><button class="inner" onclick="return false;">{#chooseone#}</button></td>
 									</tr>
 								</table>
@@ -90,7 +90,7 @@
 				<tbody class="color-a">
 					<tr>
 						<td><label for="email">{#email#}:</label></td>
-						<td class="right"><input type = "text class="text" value = "{$user.email}" name = "email" id="email" {literal}regexp="EMAIL"{/literal} required="1" realname ="{#email#}"  /></td>
+						<td class="right"><input type = "text" class="text" value = "{$user.email}" name = "email" id="email" {literal}regexp="EMAIL"{/literal} required="1" realname ="{#email#}"  /></td>
 					</tr>
 				</tbody>
 

@@ -48,14 +48,11 @@ window.onunload = quitchat;
 {/if}
 
 {if $jsload3 == "lightbox"}
-<link rel="stylesheet" href="templates/standard/css/lytebox.css" type="text/css"  />
+<link rel="stylesheet" href="templates/winter/css/lytebox.css" type="text/css"  />
 <script type="text/javascript" src="include/js/lytebox.php"></script>
 {/if}
-<link rel="stylesheet" type="text/css" href="templates/standard/css/style_main.php"/>
+<link rel="stylesheet" type="text/css" href="templates/winter/css/style_main.php"/>
 
-<!--[if lte IE 7]>
-<link rel="stylesheet" type="text/css" href="templates/standard/css/style_iefix.css"/>
-<![endif]-->
 
 {if $jsload1 == "tinymce"}
 {literal}

@@ -8,7 +8,7 @@ blindtoggle('form_file');
 toggleClass('addfile','addfile-active','addfile');
 toggleClass('add_file_butn','butn_link_active','butn_link');
 toggleClass('sm_files','smooth','nosmooth');
-changeFileview($('fileviewtype').value);
+changeFileview($('fileviewtype').value,$('folderparent').value);
 $("statusrow").setAttribute("style","display:none;");
 $("fileInfo1").innerHTML = "";
 systemMsg("fileadded");
@@ -181,7 +181,7 @@ html5up.prototype.complete = function(evt) {
 		//console.log(evt.target.responseText);
 
         indicator.setAttribute("style","width:100%");
-        window.setTimeout("finisher()",900);
+        window.setTimeout("finisher()",600);
         //document.title = "100%";
       }
 

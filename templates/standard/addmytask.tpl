@@ -20,7 +20,14 @@
 		theCal.relateTo = "end{$myprojects[project].ID}";
 		theCal.getDatepicker("datepicker_task{$myprojects[project].ID}");
 	</script>
-
+    <div class="row"><label for="tasklist">{#project#}:</label>
+	    <select name="tasklist" id="tasklist" required = "1" exclude = "-1" realname = "{#tasklist#}">
+	    <option value="-1" selected="selected">{#chooseone#}</option>
+	    {section name=tasklist loop=$myprojects[project].lists}
+	    <option value="{$myprojects[project].lists[tasklist].ID}">{$myprojects[project].lists[tasklist].name}</option>
+	    {/section}
+	    </select>
+    </div>
     <div class="row"><label for="tasklist">{#tasklist#}:</label>
 	    <select name="tasklist" id="tasklist" required = "1" exclude = "-1" realname = "{#tasklist#}">
 	    <option value="-1" selected="selected">{#chooseone#}</option>

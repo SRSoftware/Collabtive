@@ -42,7 +42,7 @@
 					</div>
 
 					<div class="nosmooth" id="sm_myprojects">
-				
+
 						<table cellpadding="0" cellspacing="0" border="0">
 							<thead>
 								<tr>
@@ -90,9 +90,9 @@
 										</td>
 										<td style="text-align:right">{$opros[opro].daysleft}&nbsp;&nbsp;</td>
 										<td class="tools">
-											{if $userpermissions.projects.edit}
-												<a class="tool_edit" href="manageproject.php?action=editform&amp;id={$opros[opro].ID}" title="{#edit#}"></a>
-											{/if}
+
+												{if $userpermissions.projects.edit}
+											<a class="tool_edit" href="javascript:void(0);" onclick = "change('manageproject.php?action=editform&amp;id={$opros[opro].ID}','form_addmyproject');toggleClass(this,'tool_edit_active','tool_edit');blindtoggle('form_addmyproject');" title="{#edit#}"></a>{/if}
 											{if $userpermissions.projects.del}
 												<a class="tool_del" href="javascript:confirmfunction('{#confirmdel#}','deleteElement(\'proj_{$opros[opro].ID}\',\'manageproject.php?action=del&amp;id={$opros[opro].ID}\')');"  title="{#delete#}"></a>
 											{/if}
@@ -114,7 +114,7 @@
 															{section name = member loop=$opros[opro].members}
 																<li>
 																	<div class="itemwrapper" id="iw_{$opros[opro].ID}_{$opros[opro].members[member].ID}">
-																	
+
 																		<table cellpadding="0" cellspacing="0" border="0">
 																			<tr>
 																				<td class="leftmen" valign="top">
@@ -136,7 +136,8 @@
 																				<td class="rightmen" valign="top">
 																					<div class="inmenue">
 																						<a class="del" href="manageproject.php?action=deassign&amp;user={$opros[opro].members[member].ID}&amp;id={$opros[opro].ID}&amp;redir=admin.php?action=projects" title="{#deassignuser#}" onclick="fadeToggle('iw_{$opros[opro].ID}_{$opros[opro].members[member].ID}');"></a>
-																						<a class="edit" href="admin.php?action=editform&amp;id={$opros[opro].members[member].ID}" title="{#edituser#}"></a>
+																					<a class="edit" href="admin.php?action=editform&amp;id={$opros[opro].members[member].ID}" title="{#edituser#}"></a>
+
 																					</div>
 																				</td>
 																			</tr>
@@ -154,12 +155,12 @@
 																			</div>
 																		{/if}
 																	</div> {*itemwrapper end*}
-																	
+
 																</li>
 															{/section}
 														</ul>
 													</div> {*inwrapper End*}
-													
+
 													<p class="tags-miles"> {*assign users*}
 														<strong>{#adduser#}:</strong>
 													</p>
@@ -180,7 +181,6 @@
 																<div class="row-butn-bottom">
 																	<label>&nbsp;</label>
 																	<button type="submit" onfocus="this.blur();">{#addbutton#}</button>
-																	<button onclick="blindtoggle('form_member');toggleClass('addmember','add-active','add');toggleClass('add_butn_member','butn_link_active','butn_link');toggleClass('sm_member','smooth','nosmooth');return false;" onfocus="this.blur();">{#cancel#}</button>
 																</div>
 															</fieldset>
 														</form>
@@ -196,7 +196,7 @@
 
 						{*Doneprojects*}
 						<div id="doneblock" class="doneblock" style="display: none;">
-							
+
 							<table class="second-thead" cellpadding="0" cellspacing="0" border="0" onclick="blindtoggle('doneblock');toggleClass('donebutn','butn_link_active','butn_link');toggleClass('toggle-done','acc-toggle','acc-toggle-active');">
 								<tr>
 									<td class="a"></td>
@@ -207,9 +207,9 @@
 								</tr>
 							</table>
 
-					
+
 							<div class="toggleblock">
-							
+
 								<table cellpadding="0" cellspacing="0" border="0" id="acc-oldprojects">
 									{section name=clopro loop=$clopros}
 
@@ -260,7 +260,7 @@
 										</tbody>
 									{/section}
 								</table>
-								
+
 							</div> {*toggleblock End*}
 						</div> {*doneblock end*}
 					</div> {*smooth end*}

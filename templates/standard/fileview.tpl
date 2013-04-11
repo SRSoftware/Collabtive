@@ -18,7 +18,7 @@
 						<td class="rightmen" valign="top">
 							<div class="inmenue">
 							{if $userpermissions.files.del}
-							<a class="del" href="javascript:confirmfunction('{$langfile.confirmdel}','deleteElement(\'fdli_{$folders[fold].ID}\',\'managefile.php?action=delfolder&amp;id={$project.ID}&amp;folder={$folders[fold].ID}&ajax=1\')');fadeToggle('fdli_{$folders[fold].ID}');" title="{#delete#}" onclick=""></a>
+							<a class="del" href="javascript:confirmfunction('{$langfile.confirmdel}','deleteElement(\'fdli_{$folders[fold].ID}\',\'managefile.php?action=delfolder&amp;id={$project.ID}&amp;folder={$folders[fold].ID}&ajax=1\')');" title="{#delete#}" onclick=""></a>
 							{/if}
 							</div>
 						</td>
@@ -132,5 +132,5 @@
 	{/if}
 	$('filenum').innerHTML = '{$filenum}';
 	new LyteBox();
-	$('dirUp').href = "javascript:change('manageajax.php?action=fileview&id={$project.ID}&folder={$folderid}','filescontent');"
+	$('dirUp').href = "javascript:change('manageajax.php?action=fileview&id={$project.ID}&folder={$folderid}','filescontent');selectFolder({$folderid});"
 </script>
