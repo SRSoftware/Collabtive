@@ -74,6 +74,7 @@ if ($action == "loginerror") {
     }
 } elseif ($action == "login") {
     $openid = getArrayVal($_POST, "openid");
+    if (isset($_GET['openid'])) $openid=getArrayVal($_GET, "openid");
     $username = getArrayVal($_POST, "username");
     $pass = getArrayVal($_POST, "pass");
 
