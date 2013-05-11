@@ -86,31 +86,8 @@ function smarty_function_paginate_middle($params, &$smarty) {
         $_page_limit = $_SESSION['SmartyPaginate'][$_id]['page_limit'];
     }
 
- //   $_url = $_SESSION['SmartyPaginate'][$_id]['url'];
-       $_url = $_SERVER['REQUEST_URI'];
-    $url = explode("?", $_url);
-    $aurl = $url[0];
-    $url = $url[1];
-    $url = explode("&", $url);
-    $_url = "";
-    $i = 0;
-    foreach($url as $uri)
-    {
-        if (!strstr($uri, "next"))
-        {
-            if ($i > 0)
-            {
-                $_url .= "&" . $uri;
-            }
-            else
-            {
-                $_url .= $uri;
-            }
-        }
-        $i = $i + 1;
-    }
-    $_url = $aurl . "?" . $_url;
-
+    $_url = $_SESSION['SmartyPaginate'][$_id]['url'];
+   // $_url = full_url();
     $_total = SmartyPaginate::getTotal($_id);
     $_curr_item = SmartyPaginate::getCurrentItem($_id);
     $_limit = SmartyPaginate::getLimit($_id);
@@ -135,17 +112,16 @@ function smarty_function_paginate_middle($params, &$smarty) {
     }
 
     while($_item <= $_total) {
-    //    if(isset($params['format']) && $params['format'] == 'page') {
-           // $_text = $_prefix . $_page . $_suffix;
-            $_text = $_page . "&nbsp;";
-    /*    } else {
+        if(isset($params['format']) && $params['format'] == 'page') {
+            $_text = $_prefix . $_page . $_suffix;
+        } else {
             $_text = $_prefix . $_item . '-';
             $_text .= ($_item + $_limit - 1 <= $_total) ? $_item + $_limit - 1 : $_total;
             $_text .= $_suffix;
-        }*/
+        }
         if($_item != $_curr_item) {
             $_this_url = $_url;
-            $_this_url .= (strpos($_url, '?') === false) ? '?' : '&';
+            $_this_url .= (strpos($_url, '?') == false) ? '?' : '&';
             $_this_url .= SmartyPaginate::getUrlVar($_id) . '=' . $_item;
             $_ret .= $_link_prefix . '<a href="' . str_replace('&', '&amp;', $_this_url) . '"' . $_attrs . '>' . $_text . '</a>' . $_link_suffix;
         } else {

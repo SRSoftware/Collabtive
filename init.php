@@ -12,7 +12,7 @@ define("CL_CONFIG", "standard");
 define("CL_VERSION", 1.0);
 define("CL_PUBDATE","1365026400");
 // uncomment for debugging
-//error_reporting(E_ALL | E_STRICT);
+error_reporting(E_ALL | E_STRICT);
 // include config file , pagination and global functions
 require(CL_ROOT . "/config/" . CL_CONFIG . "/config.php");
 require(CL_ROOT . "/include/SmartyPaginate.class.php");
@@ -27,6 +27,8 @@ if (!empty($db_name) and !empty($db_user))
 
 // Start template engine
 $template = new Smarty();
+//STOP smarty from spewing notices all over the html code
+$template->error_reporting = E_ALL & ~E_NOTICE;
 // get the available languages
 $languages = getAvailableLanguages();
 // get URL to collabtive
@@ -73,17 +75,18 @@ if (isset($conn))
     date_default_timezone_set($settings["timezone"]);
     $template->assign("settings", $settings);
 }
+
 // Set Template directory
 // If no directory is set in the system settings, default to the standard theme
 if (isset($settings['template']))
 {
     $template->template_dir = CL_ROOT . "/templates/$settings[template]/";
-    $template->tname = $settings["template"];
+    //$template->tname = $settings["template"];
 }
 else
 {
     $template->template_dir = CL_ROOT . "/templates/standard/";
-    $template->tname = "standard";
+    //$template->tname = "standard";
 }
 
 if (!isset($locale))

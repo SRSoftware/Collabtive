@@ -61,29 +61,7 @@ function smarty_function_paginate_next($params, &$smarty) {
     }
 
     $_url = SmartyPaginate::getURL($_id);
-        $_url = $_SERVER['REQUEST_URI'];
-    $url = explode("?", $_url);
-    $aurl = $url[0];
-    $url = $url[1];
-    $url = explode("&", $url);
-    $_url = "";
-    $i = 0;
-    foreach($url as $uri)
-    {
-        if (!strstr($uri, "next"))
-        {
-            if ($i > 0)
-            {
-                $_url .= "&" . $uri;
-            }
-            else
-            {
-                $_url .= $uri;
-            }
-        }
-        $i = $i + 1;
-    }
-    $_url = $aurl . "?" . $_url;
+    //$_url = full_url();
 
     $_attrs = !empty($_attrs) ? ' ' . implode(' ', $_attrs) : '';
 
@@ -95,9 +73,7 @@ function smarty_function_paginate_next($params, &$smarty) {
     } else {
         $_show = false;
     }
- //   return $_show ? '<a class = "next" href="' . str_replace('&','&amp;', $_url) . '"' . $_attrs . '>' . $_text . '</a>' : '';
-    return $_show ? '<a  href="' . str_replace('&','&amp;', $_url) . '"' . $_attrs . '><img src = "templates/' . $smarty->tname . '/images/paging_next.png" alt = ""  /></a>' : '';
-
+    return $_show ? '<a href="' . str_replace('&','&amp;', $_url) . '"' . $_attrs . '>' . $_text . '</a>' : '';
 }
 
 ?>

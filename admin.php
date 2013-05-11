@@ -118,7 +118,7 @@ if ($action == "index") {
     }
     $sysloc = $settings["locale"];
 
-    $newid = $user->add($name, $email, $company, $pass, $sysloc, $tags, $rate);
+    $newid = $user->add($name, $email, "", $pass, $sysloc, $tags, $rate);
     if ($newid) {
         if (!empty($assignto)) {
             foreach ($assignto as $proj) {
@@ -228,7 +228,7 @@ if ($action == "index") {
             $avatar = $fname;
         }
 
-        if ($user->edit($id, $name, "" , $email, $tel1, $tel2, $company, $zip, $gender, $turl, $address1, $address2, $state, $country, $tags, $locale, $avatar, $rate)) {
+        if ($user->edit($id, $name, "" , $email, $tel1, $tel2, "", $zip, $gender, $turl, $address1, $address2, $state, $country, $tags, $locale, $avatar, $rate)) {
             if (!empty($newpass) and !empty($repeatpass)) {
                 $user->admin_editpass($id, $newpass, $repeatpass);
             }
