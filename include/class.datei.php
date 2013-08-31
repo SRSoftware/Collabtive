@@ -88,6 +88,7 @@ class datei {
                 $this->loeschen($file["ID"]);
             }
         }
+        // Recursive call to delete any subfolders nested
         if (!empty($folder["subfolders"])) {
             foreach($folder["subfolders"] as $sub) {
                 $this->deleteFolder($sub["ID"], $sub["project"]);
@@ -235,25 +236,28 @@ class datei {
      */
     function upload($fname, $ziel, $project, $folder = 0)
     {
+        // Get data from form
         $name = $_FILES[$fname]['name'];
         $typ = $_FILES[$fname]['type'];
         $size = $_FILES[$fname]['size'];
         $tmp_name = $_FILES[$fname]['tmp_name'];
         $tstr = $fname . "-title";
         $tastr = $fname . "-tags";
-        $visible = $_POST["visible"];
+
+        /* Remove ?!
+		$visible = $_POST["visible"];
 
         if (!empty($visible[0])) {
             $visstr = serialize($visible);
         } else {
             $visstr = "";
         }
-
+		*/
         $title = $_POST[$tstr];
         $tags = $_POST[$tastr];
         $error = $_FILES[$fname]['error'];
         $root = CL_ROOT;
-
+        // if no filename is given, abort
         if (empty($name)) {
             return false;
         }
@@ -273,11 +277,11 @@ class datei {
             $erweiterung = "txt";
             $typ = "text/plain";
         }
-
+        // Re assemble the file name from the exploded array, without the extension
         for ($i = 0; $i < $workteile; $i++) {
             $subname .= $teilnamen[$i];
         }
-
+        // Create a random number
         $randval = mt_rand(1, 99999);
         // only allow a-z , 0-9 in filenames, substitute other chars with _
         $subname = str_replace("ä", "ae" , $subname);
@@ -291,9 +295,12 @@ class datei {
         if (strlen($subname) > 200) {
             $subname = substr($subname, 0, 200);
         }
-
+        // Assemble the final filename from the original name plus the random value.
+        // This is to ensure that files with the same name do not overwrite each other.
         $name = $subname . "_" . $randval . "." . $erweiterung;
+        // Absolute file system path used to move the file to its final location
         $datei_final = $root . "/" . $ziel . "/" . $name;
+        // Relative path, used for display / url construction in the file manager
         $datei_final2 = $ziel . "/" . $name;
 
         if (!file_exists($datei_final)) {
@@ -462,8 +469,11 @@ class datei {
                 return false;
             }
             $del = $conn->query("DELETE FROM files WHERE ID = $datei");
+            // Delete attachments of the file also. Prevents abandoned objects in messages.
             $del2 = $conn->query("DELETE FROM files_attached WHERE file = $datei");
+
             if ($del) {
+                // only remove the file from the filesystem if the delete from the database was successful
                 if (unlink($delfile)) {
                     if ($ftitle != "") {
                         $this->mylog->add($ftitle, 'file', 3, $project);
@@ -498,7 +508,9 @@ class datei {
             $file['type'] = str_replace("/", "-", $file["type"]);
 
             $set = new settings();
+            // Get settings. this is needed to add a different mimetype icon per theme to each file.
             $settings = $set->getSettings();
+            // construct the path to the mimetype icon
             $myfile = "./templates/" . $settings["template"] . "/images/files/" . $file['type'] . ".png";
             if (!file_exists($myfile)) {
                 $file['type'] = "none";
@@ -522,7 +534,8 @@ class datei {
             $file["tags"] = stripslashes($file["tags"]);
             $file["size"] = filesize(realpath($file["datei"])) / 1024;
             $file["size"] = round($file["size"]);
-            $file["addedstr"] = date("d.m.y", $file["added"]);
+            $file["addedstr"] = date(CL_DATEFORMAT, $file["added"]);
+            // Attach data about the user who uploaded the file
             $userobj = new user();
             $file["userdata"] = $userobj->getProfile($file["user"]);
 
@@ -571,7 +584,7 @@ class datei {
         $id = (int) $id;
         $lim = (int) $lim;
         $folder = (int) $folder;
-
+        // If folder is given return files from this folder, otherwise return files from the root folder
         if ($folder > 0) {
             $fold = "files/" . CL_CONFIG . "/$id/$folder/";
             $sel = $conn->query("SELECT COUNT(*) FROM files WHERE project = $id AND folder = $folder ORDER BY ID DESC");
@@ -609,7 +622,7 @@ class datei {
     }
 
     /**
-     * List all files associated to a given project
+     * List all files associated to a given project regardless of folder
      *
      * @param string $id Project ID
      * @param int $lim Limit
@@ -620,8 +633,6 @@ class datei {
     {
         global $conn;
         $id = (int) $id;
-        $lim = (int) $lim;
-        $folder = (int) $folder;
 
         $files = array();
 

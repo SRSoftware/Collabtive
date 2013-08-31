@@ -68,12 +68,12 @@ if ($action == "addform") {
     }
     // add the task
     $tid = $task->add($end, $title, $text, $tasklist, $id);
-    // if tasks was added and mailnotify is activated, send an email
     if ($tid) {
+        // Loop through the selected users from the form and assign them to the task
         foreach($assigned as $member) {
             $task->assign($tid, $member);
         }
-
+        // if tasks was added and mailnotify is activated, send an email
         if ($settings["mailnotify"]) {
             foreach($assigned as $member) {
                 $usr = (object) new user();
@@ -101,8 +101,9 @@ if ($action == "addform") {
 
     $thistask = $task->getTask($tid);
     $project = new project();
-
+    // Get all the members of the current project
     $members = $project->getProjectMembers($id, $project->countMembers($id));
+    // Get the project tasklists and the tasklist the task belongs to
     $tasklist = new tasklist();
     $tasklists = $tasklist->getProjectTasklists($id);
     $tl = $tasklist->getTasklist($thistask['liste']);
@@ -202,6 +203,7 @@ if ($action == "addform") {
     }
 
     if ($task->open($tid)) {
+        // Redir is the url where the user should be redirected, supplied with the initial request
         $redir = urldecode($redir);
         if ($redir) {
             $redir = $url . $redir;
@@ -272,12 +274,13 @@ if ($action == "addform") {
         die();
     }
     $tasklist = new tasklist();
+    // Get open and closed tasklists
     $lists = $tasklist->getProjectTasklists($id);
     $oldlists = $tasklist->getProjectTasklists($id, 0);
-
+    // Get number of assigned users
     $myproject = new project();
     $project_members = $myproject->getProjectMembers($id, $myproject->countMembers($id));
-
+    // Get all the milestones in the project
     $milestone = new milestone();
     $milestones = $milestone->getAllProjectMilestones($id);
 

@@ -1,8 +1,26 @@
 Collabtive 1.1
 + Fixed bug in tasklist editing, which would automatically remove the tasklist's assignment to a given milestone
 + Fixed notice in user editing form which showed up when an available language's name was not translated in the selected language
-+ Updated the template engine to smarty3 (mwirtz)
-+ Updated the bundled tcpdf to 6.0 (mwirtz)
++ Updated the template engine to Smarty3 (mwirtz)
++ Updated the bundled TCPDF to 6.0 (mwirtz)
++ Changed class.mylog to show 25 entries per log page instead of 10
++ Changed inserting of default values to settings table to a single query (from a foreach loop) in install.php
++ Fixed an error where any registered user could delete other users' profiles
++ Fixed an error where other files than pictures (for example PHP scripts) could be uploaded as the user's avatar 
++ Fixed a possible SQL injection in the timetracker reporting
++ Fixed text in empty project message PDF export
++ Fixed bug with empty timetracker PDF exports
++ Improved replying to messages by putting as editable default title "Re: <title of orig. message>"
++ Fixed UI bug in project's tasklist view for tasks with multiple users
++ Changed UI string "Send" to "Save"
++ Made sure the database uses UTF-8 for the connection
++ Fixed links in e-mail notifications for new project / message
++ When editing closed tasks/projects in tables, the edit form is now displayed in the top block, like for open tasks/projects
++ Fixed UI glitches with "Never due" field in project add/edit forms
++ Updated image handling to remain compatible with PHP 5.4+
++ Removed unused field "folder description" from form for adding folders
++ Made field "folder name" required in form for adding folders
++ Made installer more secure by checking for pre-existing installation in each step of installation (not only on 1st)
 
 Collabtive 1.0
 + Added translations: Hebrew, Norwegian (Nynorsk), Taiwanese

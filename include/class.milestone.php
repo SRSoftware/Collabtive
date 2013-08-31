@@ -36,6 +36,7 @@ class milestone {
     {
         global $conn;
 
+		//Convert end date to timestamp
         $end = strtotime($end);
 
         $insStmt = $conn->prepare("INSERT INTO milestones (`project`,`name`,`desc`,`start`,`end`,`status`) VALUES (?, ?, ?, ?, ?, ?)");
@@ -143,8 +144,10 @@ class milestone {
         $id = (int) $id;
 
         $upd = $conn->query("UPDATE milestones SET status = 0 WHERE ID = $id");
+        //Get attached tasklists
         $tasklists = $this->getMilestoneTasklists($id);
-        if (!empty($tasklists)) {
+        //Loop through tasklists , close all tasks in them, then close tasklist itself
+		if (!empty($tasklists)) {
             foreach ($tasklists as $tasklist) {
                 $tl = new tasklist();
                 $tasks = $tl->getTasksFromList($tasklist[ID]);
@@ -237,6 +240,7 @@ class milestone {
         $milestone = $sel->fetch();
 
         if (!empty($milestone)) {
+        	//Format start and end date for display
             $endstring = date(CL_DATEFORMAT, $milestone["end"]);
             $milestone["endstring"] = $endstring;
             $milestone["fend"] = $endstring;
@@ -247,19 +251,22 @@ class milestone {
             $milestone["name"] = stripslashes($milestone["name"]);
             $milestone["desc"] = stripslashes($milestone["desc"]);
 
+			//Get the name of the project where the message was posted for display
             $psel = $conn->query("SELECT name FROM projekte WHERE ID = $milestone[project]");
             $pname = $psel->fetch();
             $pname = $pname[0];
             $milestone["pname"] = $pname;
             $milestone["pname"] = stripslashes($milestone["pname"]);
 
+			//Daysleft contains a signed number, dayslate an unsigned one that only applies if the milestone is late
             $dayslate = $this->getDaysLeft($milestone["end"]);
+            $milestone["daysleft"] = $dayslate;
             $dayslate = str_replace("-", "" , $dayslate);
             $milestone["dayslate"] = $dayslate;
-            $milestone["daysleft"] = $dayslate;
 
+			//Get attached tasklists and messages
             $tasks = $this->getMilestoneTasklists($milestone["ID"]);
-            $milestone["tasks"] = $tasks;
+            $milestone["tasklists"] = $tasks;
             $messages = $this->getMilestoneMessages($milestone["ID"]);
             $milestone["messages"] = $messages;
 
@@ -284,7 +291,7 @@ class milestone {
 
         $milestones = array();
 
-        $sel = $conn->query("SELECT ID FROM milestones WHERE `status`=$status LIMIT $lim");
+        $sel = $conn->query("SELECT ID FROM milestones WHERE `status`=$status  ORDER BY `end` ASC LIMIT $lim");
 
         while ($milestone = $sel->fetch()) {
             $themilestone = $this->getMilestone($milestone["ID"]);
@@ -309,7 +316,7 @@ class milestone {
         global $conn;
         $project = (int) $project;
 
-        $sel = $conn->query("SELECT ID FROM milestones WHERE project = $project AND status = 0 ORDER BY ID ASC");
+        $sel = $conn->query("SELECT ID FROM milestones WHERE project = $project AND status = 0 ORDER BY `end` ASC");
         $stones = array();
 
         while ($milestone = $sel->fetch()) {
@@ -482,7 +489,7 @@ class milestone {
         $timeline = array();
 
         if ($project > 0) {
-            $sel1 = $conn->query("SELECT * FROM milestones WHERE project =  $project AND status=1 AND end = '$starttime'");
+            $sel1 = $conn->query("SELECT * FROM milestones WHERE project =  $project AND status=1 AND end = '$starttime' ORDER BY `end` ASC");
         } else {
             $sel1 = $conn->query("SELECT milestones.*,projekte_assigned.user,projekte.name AS pname FROM milestones,projekte_assigned,projekte WHERE milestones.project = projekte_assigned.projekt AND milestones.project = projekte.ID HAVING projekte_assigned.user = $user AND status=1 AND end = '$starttime'");
         } while ($stone = $sel1->fetch()) {
@@ -508,13 +515,13 @@ class milestone {
         global $conn;
         $milestone = (int) $milestone;
 
-        $sel = $conn->query("SELECT * FROM tasklist WHERE milestone = $milestone AND status = 1");
+		$objtasklist = new tasklist();
+
+        $sel = $conn->query("SELECT ID FROM tasklist WHERE milestone = $milestone AND status = 1 ORDER BY ID ASC");
         $lists = array();
         if ($milestone) {
-            while ($list = $sel->fetch()) {
-                $list["name"] = stripslashes($list["name"]);
-                $list["desc"] = stripslashes($list["desc"]);
-                array_push($lists, $list);
+            while ($listId = $sel->fetch()) {
+                array_push($lists, $objtasklist->getTasklist($listId["ID"]));
             }
         }
         if (!empty($lists)) {
@@ -528,7 +535,9 @@ class milestone {
     {
         global $conn;
         $milestone = (int) $milestone;
-        $sel = $conn->query("SELECT ID,title FROM messages WHERE milestone = $milestone");
+        $objmessage = new message();
+
+        $sel = $conn->query("SELECT title,ID,milestone FROM messages WHERE milestone = $milestone");
         $msgs = array();
         while ($msg = $sel->fetch()) {
             array_push($msgs, $msg);

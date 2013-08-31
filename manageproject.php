@@ -82,6 +82,7 @@ if ($action == "editform") {
         die();
     }
 
+	//If no end is set, default to 0
     if (!$end) {
         $end = 0;
     }
@@ -390,7 +391,7 @@ if ($action == "editform") {
     $title = $langfile['project'];
     $title = $title . " " . $tproject["name"];
     $template->assign("title", $title);
-
+	$template->assign("tree",$milestone->getAllProjectMilestones($id));
 
     $template->assign("project", $tproject);
     $template->assign("done", $done);
@@ -401,6 +402,8 @@ if ($action == "editform") {
     $template->assign("log", $log);
     SmartyPaginate::assign($template);
     $template->display("project.tpl");
+    echo "<pre>";
+    print_r($milestone->getAllProjectMilestones($id));
 } elseif ($action == "cal") {
     if (!chkproject($userid, $id)) {
         $errtxt = $langfile["notyourproject"];

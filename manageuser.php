@@ -90,7 +90,7 @@ if ($action == "loginerror") {
     // Login Error
     else {
         $template->assign("loginerror", 1);
-		$template->assign("mailnotify", $settings["mailnotify"]);
+        $template->assign("mailnotify", $settings["mailnotify"]);
         $template->display("login.tpl");
     }
 } elseif ($action == "logout") {
@@ -106,11 +106,11 @@ if ($action == "loginerror") {
     foreach($languages as $lang) {
         $fin = countLanguageStrings($lang);
 
-    	if (!($langfile[$lang] == "")) {
-        	$lang2 = $langfile[$lang];
-		} else {
-			$lang2 = $lang;
-		}
+        if (!($langfile[$lang] == "")) {
+            $lang2 = $langfile[$lang];
+        } else {
+            $lang2 = $lang;
+        }
 
         $lang2 .= " (" . $fin . "%)";
         $fin = array("val" => $lang, "str" => $lang2);
@@ -145,6 +145,12 @@ if ($action == "loginerror") {
 
         $subname = "";
         if ($typ != "image/jpeg" and $typ != "image/png" and $typ != "image/gif" and $typ != "image/pjpeg") {
+            $loc = $url . "manageuser.php?action=profile&id=$userid";
+            header("Location: $loc");
+            die();
+        }
+        // don't upload php scripts
+        if ($erweiterung == "php" or $erweiterung == "pl") {
             $loc = $url . "manageuser.php?action=profile&id=$userid";
             header("Location: $loc");
             die();
@@ -189,6 +195,14 @@ if ($action == "loginerror") {
 	}
     }
 } elseif ($action == "del") {
+    if (!$userpermissions["admin"]["add"]) {
+        $errtxt = $langfile["nopermission"];
+        $noperm = $langfile["accessdenied"];
+        $template->assign("errortext", "$errtxt<br>$noperm");
+        $template->assign("mode", "error");
+        $template->display("error.tpl");
+        die();
+    }
     if ($user->del($id)) {
         $loc = $url . "admin.php?action=users&mode=deleted";
         header("Location: $loc");
