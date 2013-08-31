@@ -174,12 +174,11 @@ if ($action == "loginerror") {
         }
     }
     if ($user->edit($userid, $name, $realname, $email, $tel1, $tel2, $company, $zip, $gender, $turl, $address1, $address2, $state, $country, "", $locale, $avatar, 0,$openid)) {
-            if (!empty($oldpass) and !empty($newpass) and !empty($repeatpass)) {
-                $user->editpass($userid, $oldpass, $newpass, $repeatpass);
-            }
-            $loc = $url . "manageuser.php?action=profile&id=$userid&mode=edited";
-            header("Location: $loc");
-        }
+        if (!empty($oldpass) and !empty($newpass) and !empty($repeatpass)) {
+            $user->editpass($userid, $oldpass, $newpass, $repeatpass);
+         }
+         $loc = $url . "manageuser.php?action=profile&id=$userid&mode=edited";
+         header("Location: $loc");
     } else {
         if ($user->edit($userid, $name, $realname, $email, $tel1, $tel2, $company, $zip, $gender, $turl, $address1, $address2, $state, $country, "", $locale, "", 0)) {
             if (isset($oldpass) and isset($newpass) and isset($repeatpass)) {
@@ -187,7 +186,7 @@ if ($action == "loginerror") {
             }
             $loc = $url . "manageuser.php?action=profile&id=$userid&mode=edited";
             header("Location: $loc");
-        }
+	}
     }
 } elseif ($action == "del") {
     if ($user->del($id)) {
