@@ -352,10 +352,12 @@ if ($action == "add") {
         }
     }
 
+    $entryPerPageLimit=100;
+
     if (!empty($start) and !empty($end)) {
-        $track = $tracker->getProjectTrack($id, $usr, $taski, $start, $end, 25);
+        $track = $tracker->getProjectTrack($id, $usr, $taski, $start, $end, $entryPerPageLimit);
     } else {
-        $track = $tracker->getProjectTrack($id, $usr, $taski, 0, 0, 25);
+        $track = $tracker->getProjectTrack($id, $usr, $taski, 0, 0, $entryPerPageLimit);
     }
     if (!empty($track)) {
         $totaltime = $tracker->getTotalTrackTime($track);
