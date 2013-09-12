@@ -349,7 +349,6 @@ td.message ul {
 }
 
 #content-left h1.second {
-	line-height: 34px;
 	margin: -5px 0 10px 0;
 	position: relative;
 	left: -8px;
@@ -357,6 +356,7 @@ td.message ul {
 
 #content-left h1 img {
 	float: left;
+	margin-top: -5px;
 }
 
 .content-spacer {
@@ -2793,7 +2793,6 @@ a.tool_edit:hover, a.tool_del:hover {
 h1 {
 	font-size: 21px;
 	margin:0 0 0px 0px;
-	height: 25px;
 	line-height: 21px;
 }
 

@@ -12,7 +12,7 @@
 				<span>&nbsp;/...</span>
 			</div>
 		
-			<h1 class="second"><img src="./templates/standard/images/symbols/task.png" alt="" />{$task.title|truncate:40:"...":true}</h1>
+			<h1 class="second"><img src="./templates/standard/images/symbols/task.png" alt="" />{$task.title}</h1>
 	
 			<div class="statuswrapper">
 				<ul>
