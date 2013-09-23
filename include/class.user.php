@@ -86,6 +86,7 @@ class user {
         
         /* if we have been updating the user data, and an open id also is posted: replace the users openid */
         if ($upd && (!empty($openid))){        	
+		if ( $openid[strlen($openid)-1]=="/") $openid=substr($openid,0,-1);
         	$updStmt = $conn->prepare("DELETE FROM openids WHERE ID = ?");// remove this to allow for multiple openids per user
         	$updStmt->execute(array($id));
         	$updStmt = $conn->prepare("INSERT INTO openids VALUES (?, ?)");
@@ -355,9 +356,13 @@ class user {
     	
         try {
         	/* here the openid auth should take place */
-        	$openid = new LightOpenID($_SERVER['HTTP_HOST']);
+	    $openid = new LightOpenID($_SERVER['HTTP_HOST']);
+
+
             if (!$openid->mode) {
+		if ($url[strlen($url)-1]=="/") $url=substr($url,0,-1);
                 $openid->identity = $url;
+		
                 header('Location: ' . $openid->authUrl());
             } elseif ($openid->mode == 'cancel') {
                 return false;

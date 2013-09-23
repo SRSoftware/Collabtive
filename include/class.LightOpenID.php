@@ -420,6 +420,7 @@ class LightOpenID
         for ($i = 0; $i < 5; $i ++) {
             if ($yadis) {
                 $headers = $this->request($url, 'HEAD', array(), true);
+		
 
                 $next = false;
                 if (isset($headers['x-xrds-location'])) {
@@ -427,9 +428,8 @@ class LightOpenID
                     $next = true;
                 }
 
-                if (isset($headers['content-type'])
-                    && (strpos($headers['content-type'], 'application/xrds+xml') !== false
-                        || strpos($headers['content-type'], 'text/xml') !== false)
+                if (isset($headers['content-type']) &&
+ (strpos($headers['content-type'], 'application/xrds+xml') !== false || strpos($headers['content-type'], 'text/xml') !== false)
                 ) {
                     # Apparently, some providers return XRDS documents as text/html.
                     # While it is against the spec, allowing this here shouldn't break
@@ -437,7 +437,7 @@ class LightOpenID
                     # ---
                     # Found an XRDS document, now let's find the server, and optionally delegate.
                     $content = $this->request($url, 'GET');
-
+		
                     preg_match_all('#<Service.*?>(.*?)</Service>#s', $content, $m);
                     foreach($m[1] as $content) {
                         $content = ' ' . $content; # The space is added, so that strpos doesn't return 0.
@@ -445,6 +445,7 @@ class LightOpenID
                         # OpenID 2
                         $ns = preg_quote('http://specs.openid.net/auth/2.0/', '#');
                         if(preg_match('#<Type>\s*'.$ns.'(server|signon)\s*</Type>#s', $content, $type)) {
+
                             if ($type[1] == 'server') $this->identifier_select = true;
 
                             preg_match('#<URI.*?>(.*)</URI>#', $content, $server);
@@ -667,9 +668,8 @@ class LightOpenID
      */
     function authUrl($immediate = false)
     {
-        if ($this->setup_url && !$immediate) return $this->setup_url;
+	if ($this->setup_url && !$immediate) return $this->setup_url;
         if (!$this->server) $this->discover($this->identity);
-
         if ($this->version == 2) {
             return $this->authUrl_v2($immediate);
         }
