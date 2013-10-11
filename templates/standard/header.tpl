@@ -13,8 +13,8 @@
 <script type="text/javascript" src="include/js/dtree.js"></script>
 {/if}
 {if $loggedin}
-<link rel="alternate" type="application/rss+xml" title="{#mymessages#}" href="managerss.php?action=mymsgs-rss&amp;user={$userid}" />
-<link rel="alternate" type="application/rss+xml" title="{#mytasks#}" href="managerss.php?action=rss-tasks&amp;user={$userid}" />
+<link rel="alternate" type="application/rss+xml" title="{#mymessages#}" href="managerss.php?action=mymsgs-rss" />
+<link rel="alternate" type="application/rss+xml" title="{#mytasks#}" href="managerss.php?action=rss-tasks" />
 {/if}
 {if $jsload|default == "ajax"}
 {literal}

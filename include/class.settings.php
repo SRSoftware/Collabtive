@@ -50,16 +50,14 @@ class settings {
      * @param string $locale Standard locale
      * @param string $timezone Standard timezone
      * @param string $templ Template
-     * @param string $rssuser Username for RSS Feed access
-     * @param string $rsspass Password for RSS Feed access
      * @return bool
      */
-    function editSettings($name, $subtitle, $locale, $timezone, $dateformat, $templ, $rssuser, $rsspass)
+    function editSettings($name, $subtitle, $locale, $timezone, $dateformat, $templ)
     {
         global $conn;
         // This is an artifact of refactoring to a key/value table for the settings
         // Create an arrray containing the settings fields as keys and new values from the user as values
-        $theSettings = array("name" => $name, "subtitle" => $subtitle, "locale" => $locale, "timezone" => $timezone, "dateformat" => $dateformat, "template" => $templ, "rssuser" => $rssuser, "rsspass" => $rsspass);
+        $theSettings = array("name" => $name, "subtitle" => $subtitle, "locale" => $locale, "timezone" => $timezone, "dateformat" => $dateformat, "template" => $templ);
         // Now prepare a statement to edit one settings row
         $updStmt = $conn->prepare("UPDATE settings SET `settingsValue` = ? WHERE `settingsKey` = ?");
         // Loop through the array containing the key/value pairs, writing the database field to $setKey and the value to $setVal

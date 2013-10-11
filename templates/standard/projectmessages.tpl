@@ -36,7 +36,7 @@
 						<a class="export"><span>{#export#}</span></a>
 						<div class="export-in"  style="width:46px;left: -46px;"> {*at one item*}
 							<a class="pdf" href="managemessage.php?action=export-project&amp;id={$project.ID}"><span>{#pdfexport#}</span></a>
-							<a class="rss" href="managerss.php?action=mymsgs-rss&amp;user={$userid}"><span>{#rssfeed#}</span></a>
+							<a class="rss" href="managerss.php?action=mymsgs-rss"><span>{#rssfeed#}</span></a>
 						</div>
 					</div>
 

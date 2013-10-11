@@ -35,8 +35,6 @@ $repeatpass = getArrayVal($_POST, "repeatpass");
 $rate = getArrayVal($_POST, "rate");
 $budget = getArrayVal($_POST, "budget");
 $role = getArrayVal($_POST, "role");
-$rssuser = getArrayVal($_POST, "rssuser");
-$rsspass = getArrayVal($_POST, "rsspass");
 
 $template->assign("mode", $mode);
 // get the available languages
@@ -533,7 +531,7 @@ if ($action == "index") {
     $template->assign("templates", $templates);
     $template->display("editsettings.tpl");
 } elseif ($action == "editsets") {
-    if ($theset->editSettings($name, $subtitle, $locale, $timezone, $dateformat, $templ, $rssuser, $rsspass)) {
+    if ($theset->editSettings($name, $subtitle, $locale, $timezone, $dateformat, $templ)) {
         $handle = opendir($template->compile_dir);
         while (false !== ($file = readdir($handle))) {
             if ($file != "." and $file != "..") {
