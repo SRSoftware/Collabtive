@@ -10,32 +10,39 @@ $project = getArrayVal($_GET, "project");
 $username = $_SESSION["username"];
 error_reporting(0);
 
-if (!empty($settings["rssuser"]) and !empty($settings["rsspass"]))
-{
-    if (!isset($_SERVER['PHP_AUTH_USER']))
-    {
-        header('WWW-Authenticate: Basic realm="Collabtive"');
-        header('HTTP/1.0 401 Unauthorized');
-        $errtxt = $langfile["nopermission"];
-        $noperm = $langfile["accessdenied"];
-        $template->assign("errortext", "$errtxt<br>$noperm");
-        $template->display("error.tpl");
-        die();
-    }
+if (!isset($_SESSION["userid"])) {
 
-    $authuser = $_SERVER['PHP_AUTH_USER'];
-    $authpw = $_SERVER['PHP_AUTH_PW'];
-    if ($authuser != $settings["rssuser"] or $authpw != $settings["rsspass"])
-    {
-        unset($_SERVER['PHP_AUTH_USER']);
-        unset($_SERVER['PHP_AUTH_PW']);
-        $errtxt = $langfile["nopermission"];
-        $noperm = $langfile["accessdenied"];
-        $template->assign("errortext", "$errtxt<br>$noperm");
-        $template->display("error.tpl");
-        die();
-    }
+  // spawn basic auth request here
+  // most probably this is not the best location for this basic auth code. feel free to move it to whereever it should be.
+  // in the ideal case, this kind of basic auth should also be available for the rss feed!
+
+  if (!isset($_SERVER['PHP_AUTH_USER'])) {
+    $msg="Collabtive";
+    header('WWW-Authenticate: Basic realm="'.$msg.'"');
+    header('HTTP/1.0 401 Unauthorized');
+    $errtxt = $langfile["nopermission"];
+    $noperm = $langfile["accessdenied"];
+    $template->assign("errortext", "$errtxt<br>$noperm");
+    $template->display("error.tpl");
+    die();
+  }
+  // try login with given credentials
+  $authuser = $_SERVER['PHP_AUTH_USER'];
+  $authpw = $_SERVER['PHP_AUTH_PW'];
+  $user = (object) new user();
+  if (!$user->login($authuser, $authpw)) {
+    header('HTTP/1.0 401 Unauthorized');
+    $errtxt = $langfile["nopermission"];
+    $noperm = $langfile["accessdenied"];
+    $template->assign("errortext", "$errtxt<br>$noperm");
+    $template->display("error.tpl");
+    die();
+  }
+  $loc = $url . "managerss.php?action=" . $action;
+  header("Location: $loc");
 }
+
+
 if ($action == "rss-tasks")
 {
     $thetask = new task();
@@ -52,11 +59,11 @@ if ($action == "rss-tasks")
     $rss->syndicationURL = $loc;
 
     $project = new project();
-    $myprojects = $project->getMyProjects($user);
+    $myprojects = $project->getMyProjects($userid);
     $tasks = array();
     foreach($myprojects as $proj)
     {
-        $task = $thetask->getAllMyProjectTasks($proj["ID"], 10000, $user);
+        $task = $thetask->getAllMyProjectTasks($proj["ID"], 10000, $userid);
 
         if (!empty($task))
         {
@@ -87,11 +94,11 @@ if ($action == "rss-tasks")
     }
     // valid format strings are: RSS0.91, RSS1.0, RSS2.0, PIE0.1 (deprecated),
     // MBOX, OPML, ATOM, ATOM0.3, HTML, JS
-    echo $rss->saveFeed("RSS2.0", CL_ROOT . "/files/" . CL_CONFIG . "/ics/feedtask-$user.xml");
+    echo $rss->saveFeed("RSS2.0", CL_ROOT . "/files/" . CL_CONFIG . "/ics/feedtask-$userid.xml");
 } elseif ($action == "mymsgs-rss")
 {
     $tproject = new project();
-    $myprojects = $tproject->getMyProjects($user);
+    $myprojects = $tproject->getMyProjects($userid);
 
     $msg = new message();
     $messages = array();
@@ -138,7 +145,7 @@ if ($action == "rss-tasks")
 
         $rss->addItem($item);
     }
-    echo $rss->saveFeed("RSS2.0", CL_ROOT . "/files/" . CL_CONFIG . "/ics/mymsgs-$user.xml");
+    echo $rss->saveFeed("RSS2.0", CL_ROOT . "/files/" . CL_CONFIG . "/ics/mymsgs-$userid.xml");
 }
 elseif($action == "projectmessages")
 {
