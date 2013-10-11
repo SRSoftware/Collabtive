@@ -5,14 +5,13 @@ $rss = new UniversalFeedCreator();
 $rss->useCached();
 
 $action = getArrayVal($_GET, "action");
-$user = getArrayVal($_GET, "user");
 $project = getArrayVal($_GET, "project");
 $username = $_SESSION["username"];
 error_reporting(0);
 
-if (!empty($settings["rssuser"]) and !empty($settings["rsspass"]))
+if (!empty($settings["rssuser"]) and !empty($settings["rsspass"])) // we have a global rss user
 {
-    if (!isset($_SERVER['PHP_AUTH_USER']))
+    if (!isset($_SERVER['PHP_AUTH_USER'])) // we don't have auth data
     {
         header('WWW-Authenticate: Basic realm="Collabtive"');
         header('HTTP/1.0 401 Unauthorized');
@@ -23,10 +22,21 @@ if (!empty($settings["rssuser"]) and !empty($settings["rsspass"]))
         die();
     }
 
+    // we have auth data
+
     $authuser = $_SERVER['PHP_AUTH_USER'];
     $authpw = $_SERVER['PHP_AUTH_PW'];
-    if ($authuser != $settings["rssuser"] or $authpw != $settings["rsspass"])
-    {
+    
+    if ($authuser == $settings["rssuser"] && $authpw == $settings["rsspass"]) { // the given auth data matches the rss settings
+
+      $userid = getArrayVal($_GET, "user"); // use the user id passed by GET request
+
+
+    } else { // the given auth data doesn't match the rss settings
+
+      // try using the given auth data for user login
+      $user = (object) new user(); 
+      if (!$user->login($authuser, $authpw)) { // user auth failed, too. Give up.
         unset($_SERVER['PHP_AUTH_USER']);
         unset($_SERVER['PHP_AUTH_PW']);
         $errtxt = $langfile["nopermission"];
@@ -34,6 +44,10 @@ if (!empty($settings["rssuser"]) and !empty($settings["rsspass"]))
         $template->assign("errortext", "$errtxt<br>$noperm");
         $template->display("error.tpl");
         die();
+      }
+      
+      // user login successfull
+      $userid = $_SESSION['userid'];
     }
 }
 if ($action == "rss-tasks")
@@ -52,11 +66,11 @@ if ($action == "rss-tasks")
     $rss->syndicationURL = $loc;
 
     $project = new project();
-    $myprojects = $project->getMyProjects($user);
+    $myprojects = $project->getMyProjects($userid);
     $tasks = array();
     foreach($myprojects as $proj)
     {
-        $task = $thetask->getAllMyProjectTasks($proj["ID"], 10000, $user);
+        $task = $thetask->getAllMyProjectTasks($proj["ID"], 10000, $userid);
 
         if (!empty($task))
         {
@@ -87,11 +101,11 @@ if ($action == "rss-tasks")
     }
     // valid format strings are: RSS0.91, RSS1.0, RSS2.0, PIE0.1 (deprecated),
     // MBOX, OPML, ATOM, ATOM0.3, HTML, JS
-    echo $rss->saveFeed("RSS2.0", CL_ROOT . "/files/" . CL_CONFIG . "/ics/feedtask-$user.xml");
+    echo $rss->saveFeed("RSS2.0", CL_ROOT . "/files/" . CL_CONFIG . "/ics/feedtask-$userid.xml");
 } elseif ($action == "mymsgs-rss")
 {
     $tproject = new project();
-    $myprojects = $tproject->getMyProjects($user);
+    $myprojects = $tproject->getMyProjects($userid);
 
     $msg = new message();
     $messages = array();
@@ -138,7 +152,7 @@ if ($action == "rss-tasks")
 
         $rss->addItem($item);
     }
-    echo $rss->saveFeed("RSS2.0", CL_ROOT . "/files/" . CL_CONFIG . "/ics/mymsgs-$user.xml");
+    echo $rss->saveFeed("RSS2.0", CL_ROOT . "/files/" . CL_CONFIG . "/ics/mymsgs-$userid.xml");
 }
 elseif($action == "projectmessages")
 {
