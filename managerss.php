@@ -5,51 +5,48 @@ $rss = new UniversalFeedCreator();
 $rss->useCached();
 
 $action = getArrayVal($_GET, "action");
+$user = getArrayVal($_GET, "user");
 $project = getArrayVal($_GET, "project");
-$username = $_SESSION["username"];
 error_reporting(0);
 
-if (!empty($settings["rssuser"]) and !empty($settings["rsspass"])) // we have a global rss user
-{
-    if (!isset($_SERVER['PHP_AUTH_USER'])) // we don't have auth data
-    {
-        header('WWW-Authenticate: Basic realm="Collabtive"');
-        header('HTTP/1.0 401 Unauthorized');
-        $errtxt = $langfile["nopermission"];
-        $noperm = $langfile["accessdenied"];
-        $template->assign("errortext", "$errtxt<br>$noperm");
-        $template->display("error.tpl");
-        die();
+if (isset($_SESSION['userid'])) {
+  $userid=$_SESSION['userid']; // User is logged in, so use his id
+} elseif (isset($_SERVER['PHP_AUTH_USER'])) { // login data submitted
+  $authuser = $_SERVER['PHP_AUTH_USER'];
+  $authpw = $_SERVER['PHP_AUTH_PW'];
+
+  if (!empty($settings["rssuser"]) && !empty($settings["rsspass"]) && $authuser == $settings["rssuser"] && $authpw == $settings["rsspass"]) {
+
+    // login data fits global rss user data
+    $userid = getArrayVal($_GET, "user"); // use the user id passed by GET request
+
+  } else {// the given auth data doesn't match the rss settings
+    // try using the given auth data for user login
+    $user = (object) new user();
+
+    if (!$user->login($authuser, $authpw)) { // user auth failed, too. Give up.
+      unset($_SERVER['PHP_AUTH_USER']);
+      unset($_SERVER['PHP_AUTH_PW']);
+      $errtxt = $langfile["nopermission"];
+      $noperm = $langfile["accessdenied"];
+      $template->assign("errortext", "$errtxt<br>$noperm");
+      $template->display("error.tpl");
+      die();
     }
 
-    // we have auth data
-
-    $authuser = $_SERVER['PHP_AUTH_USER'];
-    $authpw = $_SERVER['PHP_AUTH_PW'];
-    
-    if ($authuser == $settings["rssuser"] && $authpw == $settings["rsspass"]) { // the given auth data matches the rss settings
-
-      $userid = getArrayVal($_GET, "user"); // use the user id passed by GET request
-
-
-    } else { // the given auth data doesn't match the rss settings
-
-      // try using the given auth data for user login
-      $user = (object) new user(); 
-      if (!$user->login($authuser, $authpw)) { // user auth failed, too. Give up.
-        unset($_SERVER['PHP_AUTH_USER']);
-        unset($_SERVER['PHP_AUTH_PW']);
-        $errtxt = $langfile["nopermission"];
-        $noperm = $langfile["accessdenied"];
-        $template->assign("errortext", "$errtxt<br>$noperm");
-        $template->display("error.tpl");
-        die();
-      }
-      
-      // user login successfull
-      $userid = $_SESSION['userid'];
-    }
+    // user login successfull
+    $userid = $_SESSION['userid'];
+  }
+} else {
+  header('WWW-Authenticate: Basic realm="Collabtive"');
+  header('HTTP/1.0 401 Unauthorized');
+  $errtxt = $langfile["nopermission"];
+  $noperm = $langfile["accessdenied"];
+  $template->assign("errortext", "$errtxt<br>$noperm");
+  $template->display("error.tpl");
+  die();
 }
+
 if ($action == "rss-tasks")
 {
     $thetask = new task();
