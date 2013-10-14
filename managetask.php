@@ -86,7 +86,8 @@ if ($action == "addform") {
                 }
             }
         }
-        $loc = $url . "managetask.php?action=showproject&id=$id&mode=added";
+        $loc = $url . "managetasklist.php?action=showtasklist&id=$id&tlid=$tasklist&mode=added";
+        //$loc = $url . "managetask.php?action=showproject&id=$id&mode=added";
         header("Location: $loc");
     }
 } elseif ($action == "editform") {
