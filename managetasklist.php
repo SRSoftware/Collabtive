@@ -29,6 +29,8 @@ $classes = array("overview" => "overview",
     "tracker" => "tracking"
     );
 $template->assign("classes", $classes);
+$template->assign("mode", $mode);
+
 if (!chkproject($userid, $id)) {
     $errtxt = $langfile["notyourproject"];
     $noperm = $langfile["accessdenied"];
