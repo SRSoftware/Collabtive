@@ -91,7 +91,7 @@ if ($action == "add") {
         } elseif ($ajaxreq == 1) {
             echo "ok";
         } else {
-            $loc = $url . "manageproject.php?action=showproject&id=$tproject&mode=timeadded";
+            $loc = $url . "managetimetracker.php?action=showproject&id=$tproject&mode=timeadded";
             header("Location: $loc");
         }
     } else {
