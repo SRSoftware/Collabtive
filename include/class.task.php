@@ -298,10 +298,10 @@ class task {
         $status = (int) $status;
 
         $lists = array();
-        if ($status !== false) {
-            $sel2 = $conn->query("SELECT ID FROM tasks WHERE project = $project AND status=$status");
-        } else {
+        if ($status == -1) {
             $sel2 = $conn->query("SELECT ID FROM tasks WHERE project = $project");
+        } else {
+            $sel2 = $conn->query("SELECT ID FROM tasks WHERE project = $project AND status=$status");
         } while ($tasks = $sel2->fetch()) {
             $task = $this->getTask($tasks["ID"]);
             array_push($lists, $task);

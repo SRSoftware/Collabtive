@@ -127,14 +127,7 @@ if ($action == "add") {
         $track["taskname"] = $taskname;
     }
     $template->assign("track", $track);
-
-    $newtasks = $task->getProjectTasks($id);
-    $oldtasks = $task->getProjectTasks($id, false);
-    if ($newtasks and $oldtasks) {
-        $tasks = array_merge($newtasks, $oldtasks);
-    } else {
-        $tasks = $newtasks;
-    }
+    $tasks=$task->getProjectTasks($id, -1);
     for ($i = 0; $i < count($tasks); $i++) {
         if (empty($tasks[$i]["title"])) {
             $name = substr($tasks[$i]["text"], 0, 30);
@@ -342,7 +335,7 @@ if ($action == "add") {
     $taski = getArrayVal($_POST, "task");
 
     $task = new task();
-    $ptasks = $task->getProjectTasks($id,false);
+    $ptasks = $task->getProjectTasks($id,-1);
     $tracker = (object) new timetracker();
     if (!$usr) {
         if (!$userpermissions["timetracker"]["read"]) {
