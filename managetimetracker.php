@@ -17,11 +17,13 @@ $tracker = new timetracker();
 
 $action = getArrayVal($_GET, "action");
 $day = getArrayVal($_POST, "day");
+$endday = getArrayVal($_POST, "endday");
 $started = getArrayVal($_POST, "started");
 $ended = getArrayVal($_POST, "ended");
 $tproject = getArrayVal($_POST, "project");
 $task = getArrayVal($_POST, "ttask");
-$logdate = getArrayVal($_POST, "ttday");
+$startdate = getArrayVal($_POST, "ttday");
+$enddate = getArrayVal($_POST, "ttendday");
 $comment = getArrayVal($_POST, "comment");
 $redir = getArrayVal($_GET, "redir");
 $mode = getArrayVal($_GET, "mode");
@@ -83,7 +85,7 @@ if ($action == "add") {
         $comment = "";
     }
 
-    if ($tracker->add($userid, $tproject, $task, $comment , $started, $ended, $logdate)) {
+    if ($tracker->add($userid, $tproject, $task, $comment , $started, $ended, $startdate, $enddate)) {
         $redir = urldecode($redir);
         if ($redir) {
             $redir = $url . $redir;
@@ -159,7 +161,7 @@ if ($action == "add") {
 
     $started = $day . " " . $started;
     $started = strtotime($started);
-    $ended = $day . " " . $ended;
+    $ended = $endday . " " . $ended;
     $ended = strtotime($ended);
     if ($tracker->edit($tid, $task, $comment, $started, $ended)) {
         if ($redir) {
@@ -229,7 +231,8 @@ if ($action == "add") {
         die();
     }
 	global $conn;
-    
+
+	$id = (int) $id;
     $pname = $conn->query("SELECT name FROM projekte WHERE ID = $id");
     $pname = $pname->fetchColumn();
 
@@ -260,7 +263,7 @@ if ($action == "add") {
             array_push($thetrack, array($tra["uname"], $tra["tname"], $tra["comment"], $tra["daystring"] . "/" . $tra["startstring"] . "-" . $tra["endstring"], $hrs));
         }
 	}
- 
+
     $pdf->table($headers, $thetrack);
     $pdf->Output("project-$id-timetable.pdf", "D");
 } elseif ($action == "userxls") {

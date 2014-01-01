@@ -75,8 +75,14 @@ if ($action == "addform") {
     //Get start date from form
     $start = getArrayVal($_POST, "start");
     $status = 1;
-    if ($milestone->add($id, $name, $desc, $start, $end, $status)) {
-        $loc = $url . "managemilestone.php?action=showproject&id=$id&mode=added";
+    $milestone_id=$milestone->add($id, $name, $desc, $start, $end, $status);
+    if ($milestone_id) {
+	$liste = (object) new tasklist();
+        if ($liste->add_liste($id, $name, $desc, 0, $milestone_id)){
+		$loc = $url . "managetask.php?action=showproject&id=$id&mode=listadded";
+	} else {
+		$loc = $url . "managemilestone.php?action=showproject&id=$id&mode=added";
+	}
         header("Location: $loc");
     }
 } elseif ($action == "editform") {
@@ -129,12 +135,13 @@ if ($action == "addform") {
         die();
     }
 
-    $project = $_GET['project'];
+   // $project = $_GET['project'];
 
     //Delete the milestone
     if ($milestone->del($mid)) {
-        $loc = $url . "managemilestone.php?action=showproject&id=$id&mode=deleted";
-        header("Location: $loc");
+     echo "ok";
+	 //   $loc = $url . "managemilestone.php?action=showproject&id=$id&mode=deleted";
+     //   header("Location: $loc");
     } else {
         $template->assign("delmilestone", 0);
     }
