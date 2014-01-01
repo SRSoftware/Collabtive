@@ -37,7 +37,7 @@ $budget = getArrayVal($_POST, "budget");
 $role = getArrayVal($_POST, "role");
 $rssuser = getArrayVal($_POST, "rssuser");
 $rsspass = getArrayVal($_POST, "rsspass");
-
+$openid = getArrayVal($_POST,"openid");
 $template->assign("mode", $mode);
 // get the available languages
 $languages = getAvailableLanguages();
@@ -189,7 +189,7 @@ if ($action == "index") {
 } elseif ($action == "edituser") {
     $thetag = new tags();
     $tags = $thetag->formatInputTags($tags);
-
+    $avatar="";
     $roleobj = new roles();
     $roleobj->assign($role, $id);
     if ($id == $userid) {
@@ -243,20 +243,12 @@ if ($action == "index") {
         if (move_uploaded_file($tmp_name, $datei_final)) {
             $avatar = $fname;
         }
-
-        if ($user->edit($id, $name, "" , $email, $tel1, $tel2, $company, $zip, $gender, $turl, $address1, $address2, $state, $country, $tags, $locale, $avatar, $rate)) {
-            if (!empty($newpass) and !empty($repeatpass)) {
-                $user->admin_editpass($id, $newpass, $repeatpass);
-            }
-            header("Location: admin.php?action=users&mode=edited");
+    }
+    if ($user->edit($id, $name, "" , $email, $tel1, $tel2, $company, $zip, $gender, $turl, $address1, $address2, $state, $country, $tags, $locale, $avatar, $rate, $openid)) {
+        if (!empty($newpass) and !empty($repeatpass)) {
+            $user->admin_editpass($id, $newpass, $repeatpass);
         }
-    } else {
-        if ($user->edit($id, $name, "", $email, $tel1, $tel2, $company, $zip, $gender, $turl, $address1, $address2, $state, $country, $tags, $locale, "", $rate)) {
-            if (!empty($newpass) and !empty($repeatpass)) {
-                $user->admin_editpass($id, $newpass, $repeatpass);
-            }
-            header("Location: admin.php?action=users&mode=edited");
-        }
+        header("Location: admin.php?action=users&mode=edited");
     }
 } elseif ($action == "deleteuserform") {
     $usr = $user->getProfile($id);
