@@ -77,8 +77,9 @@ if ($action == "addform") {
     $milestone_id = $milestone->add($id, $name, $desc, $start, $end, $status);
     if ($milestone_id) {
         $liste = (object) new tasklist();
-        if ($liste->add_liste($id, $name, $desc, 0, $milestone_id)) {
-            $loc = $url . "managetask.php?action=showproject&id=$id&mode=listadded";
+        $tasklist_id=$liste->add_liste($id, $name, $desc, 0, $milestone_id);
+        if ($tasklist_id) {
+            $loc = $url . "managetasklist.php?action=showtasklist&id=$id&tlid=$tasklist_id";
         } else {
             $loc = $url . "managemilestone.php?action=showproject&id=$id&mode=added";
         }
