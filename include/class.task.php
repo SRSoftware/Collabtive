@@ -38,13 +38,14 @@ class task {
     function add($start, $end, $title, $text, $liste, $project)
     {
         global $conn;
-        $title = htmlspecialchars($title);
         $liste = (int) $liste;
         $project = (int) $project;
 
-	$start_fin = strtotime($start);
+		//convert strings to timestamps
+		$start_fin = strtotime($start);
         $end_fin = strtotime($end);
 
+    	//if strtotime doesnt return something, set the final value to the value given in the function call
         if (empty($start_fin)) {
             $start_fin = $start;
         }
@@ -83,7 +84,6 @@ class task {
         global $conn;
         $id = (int) $id;
         $liste = (int) $liste;
-        $title = htmlspecialchars($title);
 
     	//convert time string to timestamp
         $start = strtotime($start);
@@ -136,7 +136,8 @@ class task {
         global $conn;
         $id = (int) $id;
 
-        $upd = $conn->query("UPDATE tasks SET status = 1 WHERE ID = $id");
+        $updStmt = $conn->prepare("UPDATE tasks SET status = 1 WHERE ID = ?");
+    	$upd = $updStmt->execute(array($id));
         if ($upd) {
             $nameproject = $this->getNameProject($id);
             $this->mylog->add($nameproject[0], 'task', 4, $nameproject[1]);
@@ -157,8 +158,8 @@ class task {
         global $conn;
         $id = (int) $id;
 
-        $upd = $conn->query("UPDATE tasks SET status = 0 WHERE ID = $id");
-
+        $updStmt = $conn->prepare("UPDATE tasks SET status = 0 WHERE ID = ?");
+		$upd = $updStmt->execute(array($id));
         if ($upd) {
             $nameproject = $this->getNameProject($id);
             $this->mylog->add($nameproject[0], 'task', 5, $nameproject[1]);
@@ -181,7 +182,8 @@ class task {
         $task = (int) $task;
         $id = (int) $id;
 
-        $upd = $conn->query("INSERT INTO tasks_assigned (user,task) VALUES ($id,$task)");
+        $updStmt = $conn->prepare("INSERT INTO tasks_assigned (user,task) VALUES (?,?)");
+    	$upd = $updStmt->execute(array($id,$task));
         if ($upd) {
             return true;
         } else {
@@ -202,7 +204,8 @@ class task {
         $task = (int) $task;
         $id = (int) $id;
 
-        $upd = $conn->query("DELETE FROM tasks_assigned WHERE user = $id AND task = $task");
+        $updStmt = $conn->prepare("DELETE FROM tasks_assigned WHERE user = ? AND task = ?");
+    	$upd = $updStmt->execute(array($id,$task));
         if ($upd) {
             return true;
         } else {
@@ -221,7 +224,9 @@ class task {
         global $conn;
         $id = (int) $id;
 
-        $task = $conn->query("SELECT * FROM tasks WHERE ID = $id")->fetch();
+        $taskStmt = $conn->prepare("SELECT * FROM tasks WHERE ID = ?");
+    	$taskStmt->execute(array($id));
+    	$task = $taskStmt->fetch();
         if (!empty($task)) {
             // format datestring according to dateformat option
             if (is_numeric($task['start'])) {
@@ -244,6 +249,7 @@ class task {
             // Get the user(s) assigned to the task from the db
             $usel = $conn->query("SELECT user FROM tasks_assigned WHERE task = $task[ID]");
             $users = array();
+        	//fetch the assigned user(s)
             while ($usr = $usel->fetch()) {
                 // push the assigned users to an array
                 array_push($users, $usr[0]);
@@ -274,9 +280,9 @@ class task {
             $task["startstring"] = $startstring;
             $task["endstring"] = $endstring;
 
-            $task["title"] = stripslashes($task["title"]);
-            $task["text"] = stripslashes($task["text"]);
-            $task["pname"] = stripslashes($pname);
+            $task["title"] = $task["title"];
+            $task["text"] = $task["text"];
+            $task["pname"] = $pname;
             $task["list"] = $list;
             $task["daysleft"] = $tage;
 
@@ -299,10 +305,13 @@ class task {
         $status = (int) $status;
 
         $lists = array();
+    	//if a status is given, query with status - else get all the tasks in the project
         if ($status !== false) {
-            $sel2 = $conn->query("SELECT ID FROM tasks WHERE project = $project AND status=$status");
+            $sel2 = $conn->prepare("SELECT ID FROM tasks WHERE project = ? AND status=?");
+        	$sel2->execute(array($project,$status));
         } else {
-            $sel2 = $conn->query("SELECT ID FROM tasks WHERE project = $project");
+            $sel2 = $conn->prepare("SELECT ID FROM tasks WHERE project = ?");
+        	$sel2->execute(array($project));
         } while ($tasks = $sel2->fetch()) {
             $task = $this->getTask($tasks["ID"]);
             array_push($lists, $task);
@@ -329,10 +338,13 @@ class task {
         $limit = (int) $limit;
         // Get the id of the currently logged in user.
         $user = $_SESSION['userid'];
+    	$userid = (int)$userid;
+
         $lists = array();
         $now = time();
 
-        $sel2 = $conn->query("SELECT ID FROM tasks WHERE project = $project AND status=1 AND end > $now ORDER BY `end` ASC LIMIT $limit");
+        $sel2 = $conn->prepare("SELECT ID FROM tasks WHERE project = ? AND status=1 AND end > ? ORDER BY `end` ASC LIMIT $limit");
+		$sel2->execute(array($id,$now));
 
         while ($tasks = $sel2->fetch()) {
             $chk = $conn->query("SELECT ID FROM tasks_assigned WHERE user = $user AND task = $tasks[ID]")->fetch();
@@ -363,15 +375,17 @@ class task {
         global $conn;
         $project = (int) $project;
         $limit = (int) $limit;
-        $user = (int) $user;
+
         // If no user is given, use the currently logged in one.
         if ($user < 1) {
             $user = $_SESSION['userid'];
         }
+		$user = (int) $user;
         $lists = array();
         $now = time();
 
-        $sel2 = $conn->query("SELECT tasks.*,tasks_assigned.user FROM tasks,tasks_assigned WHERE tasks.ID = tasks_assigned.task HAVING tasks_assigned.user = $user AND tasks.project = $project AND status=1 ORDER BY `end` ASC ");
+        $sel2 = $conn->prepare("SELECT tasks.*,tasks_assigned.user FROM tasks,tasks_assigned WHERE tasks.ID = tasks_assigned.task HAVING tasks_assigned.user = ? AND tasks.project = ? AND status=1 ORDER BY `end` ASC ");
+		$sel2->execute(array($user,$project));
 
         while ($tasks = $sel2->fetch()) {
             $task = $this->getTask($tasks["ID"]);
@@ -403,8 +417,10 @@ class task {
         $tod = date("d.m.Y");
         $now = strtotime($tod);
 
-        $sel2 = $conn->query("SELECT tasks.*,tasks_assigned.user FROM tasks,tasks_assigned WHERE tasks.ID = tasks_assigned.task HAVING tasks_assigned.user = $user AND tasks.project = $project  AND status=1 AND end < $now ORDER BY `end` ASC LIMIT $limit");
-        while ($tasks = $sel2->fetch()) {
+        $sel2 = $conn->prepare("SELECT tasks.*,tasks_assigned.user FROM tasks,tasks_assigned WHERE tasks.ID = tasks_assigned.task HAVING tasks_assigned.user = ? AND tasks.project = ?  AND status=1 AND end < $now ORDER BY `end` ASC LIMIT $limit");
+        $sel2->execute(array($user,$project));
+
+		while ($tasks = $sel2->fetch()) {
             $task = $this->getTask($tasks["ID"]);
             array_push($lists, $task);
         }
@@ -434,9 +450,10 @@ class task {
         $lists = array();
         $now = strtotime($tod);
 
-        $sel2 = $conn->query("SELECT tasks.*,tasks_assigned.user FROM tasks,tasks_assigned WHERE tasks.ID = tasks_assigned.task HAVING tasks_assigned.user = $user AND tasks.project = $project  AND status=1 AND end = '$now' ORDER BY `end` ASC LIMIT $limit");
+        $sel2 = $conn->prepare("SELECT tasks.*,tasks_assigned.user FROM tasks,tasks_assigned WHERE tasks.ID = tasks_assigned.task HAVING tasks_assigned.user = ? AND tasks.project = ?  AND status=1 AND end = '$now' ORDER BY `end` ASC LIMIT $limit");
+ 		$sel2->execute(array($user,$project));
 
-        while ($tasks = $sel2->fetch()) {
+		while ($tasks = $sel2->fetch()) {
             $task = $this->getTask($tasks["ID"]);
             array_push($lists, $task);
         }
@@ -465,7 +482,8 @@ class task {
         $lists = array();
         $now = time();
 
-        $sel2 = $conn->query("SELECT tasks.*,tasks_assigned.user FROM tasks,tasks_assigned WHERE tasks.ID = tasks_assigned.task HAVING tasks_assigned.user = $user AND tasks.project = $project AND status=0 ORDER BY `end` ASC LIMIT $limit");
+        $sel2 = $conn->prepare("SELECT tasks.*,tasks_assigned.user FROM tasks,tasks_assigned WHERE tasks.ID = tasks_assigned.task HAVING tasks_assigned.user = ? AND tasks.project = ? AND status=0 ORDER BY `end` ASC LIMIT $limit");
+ 		$sel2->execute(array($user,$project));
 
         while ($tasks = $sel2->fetch()) {
             $task = $this->getTask($tasks["ID"]);
@@ -558,7 +576,8 @@ class task {
         global $conn;
         $id = (int) $id;
 
-        $sql = $conn->query("SELECT user FROM tasks_assigned WHERE task = $id");
+        $sql = $conn->prepare("SELECT user FROM tasks_assigned WHERE task = ?");
+		$sql->execute(array($id));
 
         $result = array();
         while ($user = $sql->fetch()) {

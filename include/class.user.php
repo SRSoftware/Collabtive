@@ -243,8 +243,10 @@ class user {
         global $conn;
         $id = (int) $id;
 
-        $sel = $conn->query("SELECT * FROM user WHERE ID = $id");
-        $profile = $sel->fetch();
+        $sel = $conn->prepare("SELECT * FROM user WHERE ID = ?");
+        $sel->execute(array($id));
+
+		$profile = $sel->fetch();
         if (!empty($profile)) {
             $profile["name"] = stripslashes($profile["name"]);
             if (isset($profile["company"])) {
@@ -291,7 +293,9 @@ class user {
     {
         $id = (int) $id;
         global $conn;
-        $sel = $conn->query("SELECT avatar FROM user WHERE ID = $id");
+        $sel = $conn->prepare("SELECT avatar FROM user WHERE ID = ?");
+    	$sel->execute(array($id));
+
         $profile = $sel->fetch();
         $profile = $profile[0];
 
