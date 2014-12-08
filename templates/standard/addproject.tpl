@@ -58,7 +58,7 @@
 			</div>
 
 			<div class = "row">
-				<label>Customer:</label>
+				<label>{#customer#}:</label>
 				<select name="company" id="company" realname="{#assignto#}">
 					<option value="-1">{#chooseone#}</option>
 					{section name=customer loop=$customers}
@@ -72,7 +72,7 @@
 				<div style="float:left;">
 			        {section name=user loop=$users}
 				        <div class="row">
-					        <input type="checkbox" class="checkbox" value="{$users[user].ID}" name="assignto[]" id="{$users[user].ID}" {if $users[user].ID == $userid} checked="checked" {/if} />
+					        <input type="checkbox" class="checkbox" value="{$users[user].ID}" name="assignto[]" id="{$users[user].ID}" {if $users[user].ID == $userid} checked="checked"{/if} />
 					        <label for="{$users[user].ID}">{$users[user].name}</label><br />
 				      	</div>
 				    {/section}
