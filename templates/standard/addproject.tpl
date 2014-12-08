@@ -57,17 +57,28 @@
 				<input type="text" class="text" name="budget" id="budget" />
 			</div>
 
+			<div class = "row">
+				<label>{#customer#}:</label>
+				<select name="company" id="company" realname="{#assignto#}">
+					<option value="-1">{#chooseone#}</option>
+					{section name=customer loop=$customers}
+						<option value = "{$customers[customer].ID}">{$customers[customer].company}</option>
+					{/section}
+				</select>
+			</div>
+
 			<div class="row">
 				<label>{#members#}:</label>
 				<div style="float:left;">
 			        {section name=user loop=$users}
 				        <div class="row">
-					        <input type="checkbox" class="checkbox" value="{$users[user].ID}" name="assignto[]" id="{$users[user].ID}" {if $users[user].ID == $userid} checked="checked" {/if} />
+					        <input type="checkbox" class="checkbox" value="{$users[user].ID}" name="assignto[]" id="{$users[user].ID}" {if $users[user].ID == $userid} checked="checked"{/if} />
 					        <label for="{$users[user].ID}">{$users[user].name}</label><br />
 				      	</div>
 				    {/section}
 			    </div>
 			</div>
+
 
 			<input type="hidden" name="assignme" value="1" />
 

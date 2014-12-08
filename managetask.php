@@ -98,7 +98,7 @@ if ($action == "addform") {
     }
 
     // check dates' consistency
-    if ($end < $start) {
+    if (strtotime($end) < strtotime($start)) {
 		$goback = $langfile["goback"];
 		$endafterstart = $langfile["endafterstart"];
 		$template->assign("mode", "error");
@@ -169,6 +169,7 @@ if ($action == "addform") {
     $thistask['listname'] = $tl['name'];
 
     $user = $task->getUser($thistask['ID']);
+
     $thistask['username'] = $user[1];
     $thistask['userid'] = $user[0];
 
@@ -202,7 +203,7 @@ if ($action == "addform") {
     }
 
     // check dates' consistency
-    if ($end < $start) {
+    if (strtotime($end) < strtotime($start)) {
 		$goback = $langfile["goback"];
 		$endafterstart = $langfile["endafterstart"];
 		$template->assign("mode", "error");
@@ -213,7 +214,9 @@ if ($action == "addform") {
 		if ($task->edit($tid, $start, $end, $title, $text, $tasklist)) {
 			$redir = urldecode($redir);
 			if (!empty($assigned)) {
+				//loop through the users to be assigned
 				foreach($assigned as $assignee) {
+					//assign the user
 					$assignChk = $task->assign($tid, $assignee);
 					if ($assignChk) {
 						if ($settings["mailnotify"]) {
@@ -246,7 +249,8 @@ if ($action == "addform") {
 				header("Location: $loc");
 			}
 		} else {
-			$template->assign("edittask", 0);
+			$loc = $url . "managetask.php?action=showproject&id=$id&mode=error";
+			header("Location: $loc");
 		}
 	}
 } elseif ($action == "del") {
@@ -312,7 +316,9 @@ if ($action == "addform") {
         $template->assign("closetask", 0);
     }
 } elseif ($action == "assign") {
+	//assign the user
     if ($task->assign($id, $user)) {
+    	//if mailnotify is on - send it
         if ($settings["mailnotify"]) {
             $usr = (object) new user();
             $user = $usr->getProfile($user);
@@ -359,16 +365,17 @@ if ($action == "addform") {
         die();
     }
     $tasklist = new tasklist();
+	$myproject = new project();
+	$milestone = new milestone();
+
     // Get open and closed tasklists
     $lists = $tasklist->getProjectTasklists($id);
     $oldlists = $tasklist->getProjectTasklists($id, 0);
-    // Get number of assigned users
-    $myproject = new project();
+    // Get number of assignable users
     $project_members = $myproject->getProjectMembers($id, $myproject->countMembers($id));
     // Get all the milestones in the project
-    $milestone = new milestone();
     $milestones = $milestone->getAllProjectMilestones($id);
-
+	//get the current project
     $pro = $myproject->getProject($id);
     $projectname = $pro["name"];
     $title = $langfile['tasks'];
