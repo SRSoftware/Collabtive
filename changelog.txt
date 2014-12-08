@@ -1,4 +1,8 @@
-﻿Collabtive 2.0
+Collabtive 2.1
++ Made customer selection available in admin area
++ Localized customer-related labels
+
+Collabtive 2.0
 + Fixed notice on desktop that resulted from missing network connection during update check
 + Fixed deactivation of error reporting during update
 + Merge existing members and new members when adding project
@@ -12,7 +16,7 @@
 + Revert to gridview as the default file view (this was changed in 1.2 b/c of issues)
 + Added edge case for SSL detection
 + Removed .htaccess file as it was causing trouble with some servers
-+ Added start date functionality for tasks (TODO: turn into optional parameter by debugging required="0" and presenting field as empty on form open;)
++ Added start date functionality for tasks
 + Fixed several typos in style_form.css
 + Fixed typo in paginate-first function
 + Fixed cancel button for deleting folders in list view
@@ -37,7 +41,6 @@
 + Remove user pictures from the onlinelist
 + Added translation of install-readme: Simplified Chinese
 + Removed unfunctional links from the day numbers in the desktop calendar
-+ Changed error reporting during installation to display fatal run-time errors
 + Fixed white page when editing of task failed.
 + Fixed conversion of umlauts when uploading files.
 + Fixed accordeon in tasklist view
@@ -45,9 +48,11 @@
 + Files in subfolders can now also be attached to messages
 + Fixed filetype detection in message::getAttachedFiles - needs more refactoring to use file::getFile
 + Fixed a problem with file uploads and visibility string
-+ Messages can now be replied to asyncronously
-+ Localized project tree labels
 + Fixed cancel button submitting the form in task->edit
++ Localized project tree labels
++ Localized label for name in list view for files
++ Added a new CSS theme: spring
++ Fixed various display bugs
 
 Collabtive 1.2
 + Added translations: Vietnamese
