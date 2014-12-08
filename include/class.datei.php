@@ -281,12 +281,10 @@ class datei {
         $typ = $_FILES[$fname]['type'];
         $size = $_FILES[$fname]['size'];
         $tmp_name = $_FILES[$fname]['tmp_name'];
-    	print_r($_FILES);
         $tstr = $fname . "-title";
         $tastr = $fname . "-tags";
 
         $title = $_POST[$tstr];
-        $tags = $_POST[$tastr];
         $error = $_FILES[$fname]['error'];
         $root = CL_ROOT;
 
@@ -296,9 +294,6 @@ class datei {
         }
 
         $desc = $_POST['desc'];
-
-        $tagobj = new tags();
-        $tags = $tagobj->formatInputTags($tags);
 
         // Find the extension
         $teilnamen = explode(".", $name);
@@ -346,22 +341,21 @@ class datei {
         $datei_final2 = $ziel . "/" . $name;
 
         if (!file_exists($datei_final)) {
-
             if (move_uploaded_file($tmp_name, $datei_final)) {
-
 				if ($project > 0) {
                     // File did not already exist, was uploaded, and a project is set
                     // Now add the file to the database, log the upload event and return the file ID
                     chmod($datei_final, 0755);
 
-                    $fid = $this->add_file($name, $desc, $project, 0, "$tags", $datei_final2, "$typ", $title, $folder, "");
+                    $fid = $this->add_file($name, $desc, $project, 0, $datei_final2, "$typ", $title, $folder, "");
 
                     if (!empty($title)) {
                         $this->mylog->add($title, 'file', 1, $project);
                     } else {
                         $this->mylog->add($name, 'file', 1, $project);
                     }
-
+					//encrypt the uploaded file
+					$this->encryptFile($datei_final);
                     return $fid;
 
                 } else {
@@ -393,7 +387,6 @@ class datei {
         $visible = "";
         $visstr = "";
         $root = CL_ROOT;
-
         if (empty($name)) {
             return false;
         }
@@ -447,14 +440,15 @@ class datei {
 
                     chmod($datei_final, 0755);
 
-                    $fid = $this->add_file($name, $desc, $project, 0, "$tags", $datei_final2, "$typ", $title, $folder, $visstr);
+                    $fid = $this->add_file($name, $desc, $project, 0,  $datei_final2, "$typ", $title, $folder, $visstr);
 
                     if (!empty($title)) {
                         $this->mylog->add($title, 'file', 1, $project);
                     } else {
                         $this->mylog->add($name, 'file', 1, $project);
                     }
-
+					//encrypt the uploaded file
+					//$this->encryptFile($datei_final);
                     return $fid;
                 } else {
                     // No project means the file is not added to the database wilfully. Return file name
@@ -573,7 +567,7 @@ class datei {
             $settings = $set->getSettings();
 
             // Construct the path to the MIME-type icon
-            $myfile = "./templates/" . $settings["template"] . "/images/files/" . $file['type'] . ".png";
+            $myfile = "./templates/" . $settings["template"] . "/theme/" . $settings["theme"] . "/images/files/" . $file['type'] . ".png";
             if (!file_exists($myfile)) {
                 $file['type'] = "none";
             }
@@ -586,12 +580,6 @@ class datei {
             } else {
                 $file['imgfile'] = 0;
             }
-
-            // Split the tags string into an array, and also count how many tags the file has
-            $tagobj = new tags();
-            $thetags = $tagobj->splitTagStr($file["tags"]);;
-            $file["tagsarr"] = $thetags;
-            $file["tagnum"] = count($file["tagsarr"]);
 
             // Strip slashes from title, desc and tags
             $file["title"] = stripslashes($file["title"]);
@@ -756,7 +744,7 @@ class datei {
      * @param int $ folder Optional parameter (holds ID of subfolder the file is uploaded to [0 = root directory])
      * @return bool $insid
      */
-    function add_file($name, $desc, $project, $milestone, $tags, $datei, $type, $title = " ", $folder = 0, $visstr = "")
+    function add_file($name, $desc, $project, $milestone, $datei, $type, $title = " ", $folder = 0, $visstr = "")
     {
         global $conn;
 
@@ -769,8 +757,8 @@ class datei {
         $folder = (int) $folder;
         $userid = $_SESSION["userid"];
         $now = time();
-        $insStmt = $conn->prepare("INSERT INTO files (`name`, `desc`, `project`, `milestone`, `user`, `tags`, `added`, `datei`, `type`, `title`, `folder`, `visible`) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
-        $ins = $insStmt->execute(array($name, $desc, $project, $milestone, $userid, $tags, $now, $datei, $type, $title, $folder, $visstr));
+        $insStmt = $conn->prepare("INSERT INTO files (`name`, `desc`, `project`, `milestone`, `user`, `added`, `datei`, `type`, `title`, `folder`, `visible`) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
+        $ins = $insStmt->execute(array($name, $desc, $project, $milestone, $userid, $now, $datei, $type, $title, $folder, $visstr));
         if ($ins) {
             $insid = $conn->lastInsertId();
             return $insid;
@@ -778,6 +766,32 @@ class datei {
             return false;
         }
     }
+
+	function encryptFile($filename, $key)
+	{
+		include_once(CL_ROOT . "/include/phpseclib/Crypt/AES.php");
+		$cipher = new Crypt_AES(); // could use CRYPT_AES_MODE_CBC
+		$cipher->setPassword($key);
+
+		$plaintext = file_get_contents($filename);
+
+		//echo $cipher->decrypt($cipher->encrypt($plaintext));
+		return file_put_contents($filename,$cipher->encrypt($plaintext));
+
+	}
+	function decryptFile($filename, $key)
+	{
+		include_once(CL_ROOT . "/include/phpseclib/Crypt/AES.php");
+		$cipher = new Crypt_AES(); // could use CRYPT_AES_MODE_CBC
+		$cipher->setPassword($key);
+
+		$ciphertext = file_get_contents($filename);
+
+
+		//echo $cipher->decrypt($cipher->encrypt($plaintext));
+		return $cipher->decrypt($ciphertext);
+
+	}
 }
 
 ?>

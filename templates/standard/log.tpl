@@ -1,6 +1,6 @@
-<div class="headline">
-	<a href="javascript:void(0);" id="loghead_toggle" class="win_block" onclick="toggleBlock('loghead');"></a>
-	
+<div class="headline accordion_toggle">
+	<a href="javascript:void(0);" id="loghead_toggle" class="win_none" onclick="changeElements('a.win_block','win_none');toggleBlock('loghead');"></a>
+
 	{if $userpermissions.admin.add}
 		<div class="wintools">
 			<div class="export-main">
@@ -14,14 +14,14 @@
 	{/if}
 
 	<h2>
-		<img src="./templates/standard/images/symbols/activity.png" alt="" />{#activity#}
+		<img src="./templates/{$settings.template}/theme/{$settings.theme}/images/symbols/activity.png" alt="" />{#activity#}
 	</h2>
 </div>
 
-<div class="block" id="loghead" style="{$logstyle}">
-	
+<div class="block accordion_content" id="loghead" style="overflow:hidden;">
+
 	<table class="log" cellpadding="0" cellspacing="0" border="0">
-		
+
 		<thead>
 			<tr>
 				<th class="a"></th>
@@ -45,33 +45,34 @@
 			{else}
 				<tbody class="color-b" id="log_{$log[logitem].ID}">
 			{/if}
-			
+
 				<tr>
 					<td style="padding:0" class="symbols">
 						{if $log[logitem].type == "tasklist"}
-							<img style="margin:0 0 0 3px;" src="./templates/standard/images/symbols/tasklist.png" alt="" />
+							<img style="margin:0 0 0 3px;" src="./templates/{$settings.template}/theme/{$settings.theme}/images/symbols/tasklist.png" alt="" />
 						{elseif $log[logitem].type == "user"}
-							<img style="margin:0 0 0 3px;" src="./templates/standard/images/symbols/userlist.png" alt="" />
+							<img style="margin:0 0 0 3px;" src="./templates/{$settings.template}/theme/{$settings.theme}/images/symbols/userlist.png" alt="" />
 						{elseif $log[logitem].type == "task"}
-							<img style="margin:0 0 0 3px;" src="./templates/standard/images/symbols/task.png" alt="" />
+							<img style="margin:0 0 0 3px;" src="./templates/{$settings.template}/theme/{$settings.theme}/images/symbols/task.png" alt="" />
 						{elseif $log[logitem].type == "projekt"}
-							<img style="margin:0 0 0 3px;" src="./templates/standard/images/symbols/projects.png" alt="" />
+
+							<img style="margin:0 0 0 3px;" src="./templates/{$settings.template}/theme/{$settings.theme}/images/symbols/projects.png" alt="" />
 						{elseif $log[logitem].type == "milestone"}
-							<img style="margin:0 0 0 3px;" src="./templates/standard/images/symbols/miles.png" alt="" />
+							<img style="margin:0 0 0 3px;" src="./templates/{$settings.template}/theme/{$settings.theme}/images/symbols/miles.png" alt="" />
 						{elseif $log[logitem].type == "message"}
-							<img style="margin:0 0 0 3px;" src="./templates/standard/images/symbols/msgs.png" alt="" />
+							<img style="margin:0 0 0 3px;" src="./templates/{$settings.template}/theme/{$settings.theme}/images/symbols/msgs.png" alt="" />
 						{elseif $log[logitem].type == "file"}
-							<img style="margin:0 0 0 3px;" src = "./templates/standard/images/symbols/files.png" alt="" />
+							<img style="margin:0 0 0 3px;" src = "./templates/{$settings.template}/theme/{$settings.theme}/images/symbols/files.png" alt="" />
 						{elseif $log[logitem].type == "folder"}
-							<img style="margin:0 0 0 3px;" src = "./templates/standard/images/symbols/folder-root.png" alt="" />
+							<img style="margin:0 0 0 3px;" src = "./templates/{$settings.template}/theme/{$settings.theme}/images/symbols/folder-root.png" alt="" />
 						{elseif $log[logitem].type == "track"}
-							<img style="margin:0 0 0 3px;" src = "./templates/standard/images/symbols/timetracker.png" alt="" />
+							<img style="margin:0 0 0 3px;" src = "./templates/{$settings.template}/theme/{$settings.theme}/images/symbols/timetracker.png" alt="" />
 						{/if}
 					</td>
 					<td>
 						<div class="toggle-in">
 							<strong>{$log[logitem].name|truncate:55:"...":true}</strong><br />
-							
+
 							<span class="info">{#was#}
 								{if $log[logitem].action == 1}
 									{#added#}
@@ -111,7 +112,7 @@
 				<td class="tools"></td>
 			</tr>
 		</tbody>
-		
+
 	</table>
 
 	<div class="tablemenue"></div>
