@@ -68,6 +68,7 @@ if ($action == "upload") {
     }
     $chk = 0;
     for($i = 1;$i <= $num;$i++) {
+
 		$fid = $myfile->upload("userfile$i", $upath, $id, $upfolder);
         $fileprops = $myfile->getFile($fid);
 
@@ -114,7 +115,7 @@ if ($action == "upload") {
         }
     }
     $loc = $url .= "managefile.php?action=showproject&id=$id&mode=added";
-  	header("Location: $loc");
+  	//header("Location: $loc");
 } elseif ($action == "uploadAsync") {
     if (!$userpermissions["files"]["add"]) {
         $errtxt = $langfile["nopermission"];
@@ -139,6 +140,7 @@ if ($action == "upload") {
     $num = count($_FILES);
     $chk = 0;
     foreach($_FILES as $file) {
+    	$myfile->encryptFile($file["tmp_name"], $settings["filePass"]);
         $fid = $myfile->uploadAsync($file["name"], $file["tmp_name"], $file["type"], $file["size"], $upath, $id, $upfolder);
         $fileprops = $myfile->getFile($fid);
 
@@ -310,6 +312,7 @@ if ($action == "upload") {
         $template->display("error.tpl");
         die();
     }
+
     $name = getArrayVal($_POST, "foldertitle");
     $desc = getArrayVal($_POST, "folderdesc");
     $parent = getArrayVal($_POST, "folderparent");
@@ -337,6 +340,7 @@ if ($action == "upload") {
         }
     }
 } elseif ($action == "movefile") {
+
     if (!$userpermissions["files"]["edit"]) {
         $errtxt = $langfile["nopermission"];
         $noperm = $langfile["accessdenied"];
@@ -349,6 +353,46 @@ if ($action == "upload") {
 
     $target = $_GET["target"];
     $myfile->moveFile($file, $target);
+}
+elseif($action == "downloadfile")
+{
+	if (!$userpermissions["files"]["view"]) {
+		$errtxt = $langfile["nopermission"];
+		$noperm = $langfile["accessdenied"];
+		$template->assign("errortext", "$errtxt<br>$noperm");
+		$template->display("error.tpl");
+		die();
+	}
+
+	//get the file ID.
+	$fileId = getArrayVal($_GET,"file");
+	$thefile = $myfile->getFile($fileId);
+
+	//getFile path and filesize
+	$filePath = $thefile["datei"];
+	$fsize =  filesize($filePath);
+
+	//Send HTTP headers for dowonload
+	header('Content-Description: File Transfer');
+	header('Content-Type: application/octet-stream');
+	header('Content-Disposition: attachment; filename="'.basename($filePath).'"');
+	header('Content-Transfer-Encoding: binary');
+	header('Connection: Keep-Alive');
+	header('Expires: 0');
+	header('Cache-Control: must-revalidate, post-check=0, pre-check=0');
+	header('Pragma: public');
+	header("Content-length: $fsize");
+	//Try to decrypt the file
+	$plaintext = $myfile->decryptFile($filePath, $settings["filePass"]);
+
+	//no plaintext means file was not encrypted or not decrypted. however deliver to unmodified file
+	if(!$plaintext)
+	{
+		$plaintext = file_get_contents($filePath);
+	}
+	//Render the content
+	echo $plaintext;
+
 }
 
 ?>
