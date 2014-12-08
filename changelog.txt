@@ -4,7 +4,7 @@
 + Merge existing members and new members when adding project
 + Error reporting globally set to E_WARNING
 + Changed redirection after project creation from desktop or project administration to project dashboard
-+ Improved translations: German, Polish, Farsi, Norwegian (Bokmal & Nynorsk)
++ Improved translations: German, Polish, Farsi, Norwegian (Bokmal & Nynorsk), Simplified Chinese
 + Improved project tree's handling for special characters
 + Removed file upload from the add reply form. Now only previously uploaded files can be attached to replies.
 + Lots of code beautification in templates files
@@ -23,15 +23,31 @@
 + Remove force-compile option from template engine. This disabled caching and caused performance problems for some users.
 + Add compileAllConfig() to force a recompile of the config files in certain cases.
 + Fixed possible sql vulnerability in manageajax.php
++ Dont expose plain filesystem links to uploaded files. Downloads are routed through download.php
 + Added AES encryption of uploaded files
 + Added CSS theme functionality. Now the CSS and image files for each template set reside in a /themes/ subfolder. This way, there can be CSS only variations of templates created more easily.
 + Change color of tab info string, making it more readable
 + Set cache directory for HTML purifier definitions to /files/standard/ics/
 + Messages can now be edited asyncronously
 + Messages can now be replied to asyncronously
++ Implemented a new structure for the desktop. It is now an accordeon where clicking each section slides it open and closes all others.
 + Implemented a new structure for the project dashboard. It is now an accordeon where clicking each section slides it open and closes all others.
++ Customer profiles can be added in admin->customer
 + A customer can be assigned to projects
 + Remove user pictures from the onlinelist
++ Added translation of install-readme: Simplified Chinese
++ Removed unfunctional links from the day numbers in the desktop calendar
++ Changed error reporting during installation to display fatal run-time errors
++ Fixed white page when editing of task failed.
++ Fixed conversion of umlauts when uploading files.
++ Fixed accordeon in tasklist view
++ Fixed a bug where the list view in project->files could not be selected if the user's role had file:add deactivated.
++ Files in subfolders can now also be attached to messages
++ Fixed filetype detection in message::getAttachedFiles - needs more refactoring to use file::getFile
++ Fixed a problem with file uploads and visibility string
++ Messages can now be replied to asyncronously
++ Localized project tree labels
++ Fixed cancel button submitting the form in task->edit
 
 Collabtive 1.2
 + Added translations: Vietnamese
@@ -293,6 +309,7 @@ Collabtive 0.6.3
 + Fixed a bug in tasklist editing where not all active milestones were available to assign the list to.
 + Added Favicon to standard theme
 + Added TinyMCE editor options to message edit form, reply form, milestone add form, and milestone edit form
+
 + Dropped update support for updating from versions earlier than 0.5
 + Removed calls to deprecated function set_magic_quotes_runtime() in class tcpdf (PDF export)
 
