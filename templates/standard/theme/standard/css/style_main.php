@@ -17,8 +17,8 @@ $logoSubname = "#6ab0c5";
 $leftBlockBg = "#fff";
 
 //$tabsInfo = "#6d7f93";
-$tabsInfo = "#839BB5";
-$mainMenueInfo = "#6d7f93"; // Info-Span in Mainmenue
+$tabsInfo = "#c5d2e1";
+$mainMenueInfo = "#c5d2e1"; // Info-Span in Mainmenue
 
 $bigCalToday = "#eaf6e3"; //day in the Big Calendar
 
@@ -2989,6 +2989,13 @@ a.butn_checked:hover {
 
 a.butn_reply {
 	background-image: url(../images/butn-reply.png);
+}
+
+a.butn_reply_active {
+	display: block;
+	width: 100%;
+	height: 27px;
+	background: url(../images/butn-reply.png) no-repeat 4px -20px;
 }
 
 a.tool_edit, a.tool_del {

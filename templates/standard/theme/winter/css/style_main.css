@@ -18,8 +18,8 @@ html, body {
 }
 
 body {
-	color:#082343;
-	background:#28648b;
+	color:#4566A4;
+	background:#FFFFFF url(../images/main-bg.jpg) repeat-x 0 0;
 	background-attachment: fixed;
 }
 
@@ -54,12 +54,12 @@ img {
 }
 
 ::selection {
-	background: #001e40 ;
+	background: #4B6EB2 ;
 	color: #fff;
 }
 
 ::-moz-selection {
-	background: #001e40;
+	background: #4B6EB2;
 	color: #fff;
 }
 
@@ -126,7 +126,7 @@ td.message ul {
 
 .logo-name h2 {
 	font-size: 15px;
-	color: #6ab0c5;
+	color: #4B6EB2;
 	margin: 8px 0 18px 0;
 }
 
@@ -190,7 +190,7 @@ td.message ul {
 }
 
 #header .logo h1 span.subtitle {
-	color: #6ab0c5;
+	color: #4B6EB2;
 }
 
 /* ## MAIN-MENUE ######################################## */
@@ -286,18 +286,13 @@ td.message ul {
 	background-position: 0 -32px;
 }
 
-
-#mainmenue .submen li.customer-settings a {
-	background: url(../images/main-admin-d.png) no-repeat 0 0;
-}
-
 #mainmenue li a:hover span {
 	display: block;
 	width: 200px;
 	position: absolute;
 	top: 18px;
 	left: -222px;
-	color: #c5d2e1;
+	color: #4B6EB2;
 	font-size: 12px;
 	font-weight: bold;
 	text-align: right;
@@ -396,11 +391,11 @@ td.message ul {
 
 
 .content-right-in a {
-	color: #6d7f93;
-}
+	color: #FFFFFF;
+//	color: #4566A4}
 
 .content-right-in a:hover {
-	color: #9daab7;
+	color: #FFFFFF;
 }
 
 #content-right h2 {
@@ -583,9 +578,9 @@ td.message ul {
 	top: -34px;
 	right: 0;
 	z-index: 9;
-	color: #001e40;
+	color: <? echo $colorMain; ?>;
 	font-size: 12px;
-	background: #fff;
+	background: <? echo $leftBlockBg; ?>;
 	padding: 0 7px 0 7px;
 	-moz-border-radius-topleft: 2px;
 	-moz-border-radius-topright: 2px;
@@ -595,7 +590,7 @@ td.message ul {
 
 .wintools .export-main a:hover span, .wintools .export-main .export-in a:hover span, .wintools a:hover span {
 	top: -28px;
-	color: #fff;
+	color: <? echo $leftBlockBg; ?>;
 	font-weight: bold;
 }
 
@@ -648,7 +643,7 @@ td.message ul {
 }
 
 .projects .wintools .export-main a:hover span, .projects .wintools a:hover span {
-	background: #3f7174;
+	background: <? echo $projectsMain; ?>;
 }
 
 .tasks .export-main, .tasks .export-main a {
@@ -660,7 +655,7 @@ td.message ul {
 }
 
 .tasks .wintools .export-main a:hover span, .tasks .wintools a:hover span, .wintools a:hover span {
-	background: #365a76;
+	background: <? echo $tasksMain; ?>;
 }
 
 .msgs .export-main, .msgs .export-main a {
@@ -672,7 +667,7 @@ td.message ul {
 }
 
 .msgs .wintools .export-main a:hover span, .msgs .wintools a:hover span {
-	background: #65635e;
+	background: <? echo $msgsMain; ?>;
 }
 
 .user .export-main, .user .export-main a {
@@ -684,7 +679,7 @@ td.message ul {
 }
 
 .user .wintools .export-main a:hover span, .user .wintools a:hover span {
-	background: #576d5a;
+	background: <? echo $userMain; ?>;
 }
 
 .timetrack .wintools .export-main, .timetrack .wintools .export-main a {
@@ -692,7 +687,7 @@ td.message ul {
 }
 
 .timetrack .wintools .export-main a:hover span, .timetrack .wintools a:hover span {
-	background: #8f5f45;
+	background: <? echo $timetrackMain; ?>;
 }
 
 .miles .wintools .export-main, .miles .wintools .export-main a {
@@ -700,7 +695,7 @@ td.message ul {
 }
 
 .miles .wintools .export-main a:hover span, .miles .wintools a:hover span {
-	background: #824e48;
+	background: <? echo $milesMain; ?>;
 }
 
 .neutral .wintools .export-main, .neutral .wintools .export-main a {
@@ -708,7 +703,7 @@ td.message ul {
 }
 
 .neutral .wintools .export-main a:hover span, .neutral .wintools a:hover span {
-	background: #6f6d6e;
+	background: <? echo $neutralMain; ?>;
 }
 
 .files .wintools .addmen .export-main, .files .wintools .addmen .export-main a {
@@ -720,7 +715,7 @@ td.message ul {
 }
 
 .files .wintools .export-main a:hover span, .files .wintools a:hover span {
-	background: #484f64;
+	background: <? echo $filesMain; ?>;
 }
 
 .export-main a.export, .wintools .export-main a.export, .files .wintools .addmen .export-main a.export {
@@ -806,7 +801,6 @@ td.message ul {
 	width: 27px;
 	background-position: 0 -31px;
 }
-
 /* ## IN-MENUES ######################################## */
 
 .inwrapper {
@@ -1103,7 +1097,6 @@ td.message ul {
 	line-height: 22px;
 	margin: 0 0 1px 0;
 	padding: 0 8px 0 8px;
-
 	white-space: nowrap;
 	color: #fff;
 	font-size: 11px;
@@ -1256,12 +1249,12 @@ td.message ul {
 	width: 167px;
 	height: 23px;
 	line-height: 23px;
-	color: #6d7f93;
+	color: #FFFFFF;
 	padding-left: 1px;
 }
 
 #onlinelist a.user:hover, .chat-user {
-	color: #9daab7;
+	color: #FFFFFF;
 	/*background: url(../images/onlinelist-hover.png) repeat 0 0; */
 }
 
@@ -1422,7 +1415,7 @@ body a.butn_link, body a.butn_link_active {
 }
 
 .msgs .message {
-	width: 585px;
+	width: 562px;
 	margin: 0;
 	padding: 0;
 }
@@ -1432,15 +1425,13 @@ body a.butn_link, body a.butn_link_active {
 }
 
 .message-in {
-	width: 585px;
+	width: 562px;
 	overflow-x: auto;
 }
 .message-in ul
 {
 padding-left;
-
 }
-
 message-in li
 {
 list-style-type: disc;
@@ -1595,7 +1586,7 @@ ul.tabs li a:hover span {
 	top: 25px;
 	display: block;
 	width: 250px;
-	color: #c5d2e1;
+	color: #4B6EB2;
 	font-size: 12px;
 	font-weight: bold;
 }
@@ -1610,10 +1601,6 @@ ul.tabs li.desk a {
 
 ul.tabs li.projects a {
 	background-image: url(../images/symbols/tab-projects.png);
-}
-
-ul.tabs li.customers a {
-	background-image: url(../images/symbols/tab-customers.png);
 }
 
 ul.tabs li.tasks a {
@@ -1668,14 +1655,14 @@ ul.tabs li.system-settings a {
 
 #modal_container {
     overflow: auto;
-    color:  #001e40;
+    color:  #4B6EB2;
     background: none;
     text-align: left;
 }
 
 #modal_container.tasksmodal, #modal_container.milesmodal {
-	background: #203d56;
-	color: #365a76;
+	background: #7F97BC;
+	color: #4566A4;
 	min-height: 150px;
 	width: 500px;
 	padding: 6px 12px 12px 12px;
@@ -1686,8 +1673,8 @@ ul.tabs li.system-settings a {
 }
 
 #modal_container.milesmodal {
-	background: #62332e;
-	color: #824e48;
+	background: #7F97BC;
+	color: #4566A4;
 }
 
 #modal_container.pics {
@@ -1702,7 +1689,7 @@ ul.tabs li.system-settings a {
 }
 
 #modal_overlay {
-    background-color: #001e40;
+    background-color: #4B6EB2;
 
 }
 
@@ -1711,7 +1698,7 @@ ul.tabs li.system-settings a {
 }
 
 #modal_overlay.tasksoverlay {
-    background: #869cad;
+    background: #4566A4;
 }
 
 #modal_overlay.milesoverlay {
@@ -1878,7 +1865,6 @@ ul.tabs li.system-settings a {
 }
 
 .status {
-
 	width: 130px;
 	height:	56px;
 	position: relative;
@@ -1931,7 +1917,6 @@ ul.tabs li.system-settings a {
 	height: 25px;
 	padding: 12px 7px 0 6px;
 }
-
 
 .contenttitle_in {
 	float: left;
@@ -2162,7 +2147,7 @@ a.dir_up_butn:hover {
 .block table tr.acc td .accordion_content .acc-in {
 
 	border-top: 1px solid #fff;
-	padding: 12px 9px 18px 9px;
+	padding: 12px 9px 18px 45px;
 	line-height: normal;
 	overflow: hidden;
 }
@@ -2263,11 +2248,11 @@ th.tools, td.tools {
 /* ## TABLES ################ Block - Colors ############# */
 
 .projects .headline, .projects a.butn_link, .projects button, .projects a.butn_link_active:hover, .projects .inmenue a span, .projects .moreinfo {
-	background: url(../images/tables-projects-head.png);
+	background: url(../images/bg_table.png);
 }
 
 .projects thead {
-	background: url(../images/tables-projects-thead.png);
+	background: url(../images/bg_th.png);
 }
 
 .projects .second-thead, .projects .second-thead:hover td, .projects .block_in_wrapper, .projects .inwrapper li:hover, .projects .tableend, .projects .statuswrapper li.link:hover {
@@ -2275,56 +2260,56 @@ th.tools, td.tools {
 }
 
 .projects .color-a, .projects .statuswrapper li, .projects .datepick table td, .projects .datepick tr.head td {
-	background: url(../images/tables-projects-bg-a.png);
+	background: url(../images/tables-tasks-bg-a.png);
 }
 
 .projects .color-b, .projects .datepick td.wrong, .projects .datepick tr.weekday td {
-	background: url(../images/tables-projects-bg-b.png);
+	background: url(../images/tables-tasks-bg-b.png);
 }
 
 .projects .block, .projects a, .projects h1, .projects .block .tablemenue, .projects .block .addmenue, .projects p.tags-miles {
-	border-color: #3f7174;
-	color: #3f7174;
+	border-color: #96B4DE;
+	color: #4566A4;
 }
 
 .projects, .projects .block td.finished, .projects .block td.finished a, .projects .datepick .cal, .projects .block_in_wrapper h2 {
-	color: #3f7174;
+	color: #4566A4;
 }
 
 .projects h1 span, .projects h1 span a, .projects .status, .projects .statusbar, .projects .statusbar_b {
-	color: #8caaac;
-	border-color: #8caaac;
+	color: #CCCCCC;
+	border-color: #CCCCCC;
 }
 
 .projects .datepick td.wrong {
-	color: #8caaac;
+	color: #CCCCCC;
 }
 
 .projects h1 span a {
-	border-color: #3f7174;
+	border-color: #96B4DE;
 }
 
 .projects form, .projects form input, .projects form select, .projects form textarea, .projects form .row .editor, .projects .statuswrapper li {
-	border-color: #8caaac;
-	color: #3f7174;
+	border-color: #CCCCCC;
+	color: #4566A4;
 }
 
 .projects a.butn_link:hover, .projects button:hover, .projects form .fileinput:hover button, .projects a.butn_link_active, .projects .datepick .picker {
-	background: #275154;
+	background: #7F97BC;
 }
 
 /* TASKS COLORS #####################################*/
 
 .tasks .headline, .tasks a.butn_link, .tasks button, .tasks a.butn_link_active:hover, .tasks .inmenue a span, .tasks .moreinfo {
-	background: url(../images/tables-tasks-head.png);
+	background: url(../images/bg_table.png);
 }
 
 .tasks thead {
-	background: url(../images/tables-tasks-thead.png);
+	background: url(../images/bg_th.png);
 }
 
 .tasks .second-thead, .tasks .second-thead:hover td, .tasks .block_in_wrapper, .tasks .statuswrapper li.link:hover {
-	background: url(../images/tables-tasks-sechead.png);
+	background: url(../images/bg_th.png);
 }
 
 .tasks .color-a, .tasks .datepick table td, .tasks .datepick tr.head td, .tasks .statuswrapper li {
@@ -2336,40 +2321,40 @@ th.tools, td.tools {
 }
 
 .tasks, .tasks a, .tasks h1, .tasks .headline_lone h2 , .tasks .block .tablemenue, .tasks .block .addmenue, .tasks p.tags-miles {
-	border-color: #365a76;
-	color: #365a76;
+	border-color: #96B4DE;
+	color: #4566A4;
 }
 
 .tasks .block td.finished, .tasks .block td.finished a, .tasks .datepick .cal, .tasks .block_in_wrapper h2 {
-	color: #365a76;
+	color: #4566A4;
 }
 
 .tasks h1 span, .tasks h1 span a, .tasks .datepick td.wrong {
-	color: #869cad;
+	color: #4566A4;
 }
 
 .task h1 span a {
-	border-color: #365a76;
+	border-color: #96B4DE;
 }
 
 .tasks form, .tasks form input, .tasks form select, .tasks form textarea, .tasks form .row .editor, .tasks .statuswrapper li {
-	border-color: #869cad;
-	color: #365a76;
+	border-color: #4566A4;
+	color: #4566A4;
 }
 
 .tasks a.butn_link:hover, .tasks button:hover, .tasks form .fileinput:hover button, .tasks a.butn_link_active, .tasks .datepick .picker {
-	background: #203d56;
+	background: #7F97BC;
 }
 
 
 /* MESSAGES COLORS #################################*/
 
 .msgs .headline, .msgs a.butn_link, .msgs button, .msgs a.butn_link_active:hover, .msgs .inmenue a span, .msgs .moreinfo, .msgs .inmenue a span, .msgs .moreinfo {
-	background: url(../images/tables-msgs-head.png);
+	background: url(../images/bg_table.png);
 }
 
 .msgs thead {
-	background: url(../images/tables-msgs-thead.png);
+	background: url(../images/bg_th.png);
 }
 
 .msgs .second-thead, .msgs .second-thead:hover td, .msgs .block_in_wrapper, .msgs .inwrapper li:hover, .msgs .statuswrapper li.link:hover {
@@ -2377,11 +2362,11 @@ th.tools, td.tools {
 }
 
 .msgs .color-a, .msgs .statuswrapper li {
-	background: url(../images/tables-msgs-bg-a.png);
+	background: url(../images/tables-tasks-bg-a.png);
 }
 
 .msgs .color-b {
-	background: url(../images/tables-msgs-bg-b.png);
+	background: url(../images/tables-tasks-bg-b.png);
 }
 
 .msgs .color-a ul.files table, .msgs .color-b ul.files table {
@@ -2389,8 +2374,8 @@ th.tools, td.tools {
 }
 
 .msgs, .msgs .block, .msgs a, .msgs h1, .msgs .block .tablemenue, .msgs .block .addmenue, .msgs p.tags-miles {
-	border-color: #65635e;
-	color: #65635e;
+	border-color: #96B4DE;
+	color: #4566A4;
 }
 
 .msgs h1 span, .msgs h1 span a, .msgs .block_in_wrapper h2 {
@@ -2398,26 +2383,26 @@ th.tools, td.tools {
 }
 
 .msgs h1 span a {
-	border-color: #65635e;
+	border-color: #96B4DE;
 }
 
 .msgs form, .msgs form input, .msgs form select, .msgs form textarea, .msgs form .row .editor, .msgs .statuswrapper li {
 	border-color: #a3a19e;
-	color: #65635e;
+	color: #96B4DE;
 }
 
 .msgs a.butn_link:hover, .msgs button:hover, .msgs button.inner-active, .msgs form .fileinput:hover button, .msgs a.butn_link_active {
-	background: #464440;
+	background: #7F97BC;
 }
 
 /* USER COLORS #################################*/
 
 .user .headline, .user a.butn_link, .user button, .user a.butn_link_active:hover, .user .inmenue a span, .user .moreinfo {
-	background: url(../images/tables-user-head.png);
+	background: url(../images/bg_table.png);
 }
 
 .user thead, .user .contenttitle {
-	background: url(../images/tables-user-thead.png);
+	background: url(../images/bg_th.png);
 }
 
 .user .second-thead, .user .second-thead:hover td, .user .block_in_wrapper, .user .inwrapper li:hover, .user .tableend {
@@ -2437,8 +2422,8 @@ th.tools, td.tools {
 }
 
 .user .block, .user .blockwrapper, .user a, .user h1, .user .tablemenue, .user .addmenue, .user p.tags-miles, .user .userwrapper, .user .block_in_wrapper h2 {
-	border-color: #576d5a;
-	color: #576d5a;
+	border-color: #96B4DE;
+	color: #4566A4;
 }
 
 .user h1 span, .user h1 span a, .user .inmenue a span {
@@ -2446,16 +2431,16 @@ th.tools, td.tools {
 }
 
 .user h1 span a {
-	border-color: #576d5a;
+	border-color: #96B4DE;
 }
 
 .user form, .user form input, .user form select, .user form textarea, .user form .row .editor {
 	border-color: #bbcbbb;
-	color: #576d5a;
+	color: #4566A4;
 }
 
 .user a.butn_link:hover, .user button:hover, .user form .fileinput:hover button, .user a.butn_link_active {
-	background: #3d573f;
+	background: #7F97BC;
 }
 
 /* USER PROFILE */
@@ -2480,19 +2465,19 @@ th.tools, td.tools {
 /* NEUTRAL COLORS #################################*/
 
 .neutral .headline, .neutral a.butn_link, .neutral button, .neutral a.butn_link_active:hover {
-	background: url(../images/tables-neutral-head.png);
+	background: url(../images/bg_table.png);
 }
 
 .neutral thead, .neutral .contenttitle {
-	background: url(../images/tables-neutral-thead.png);
+	background: url(../images/bg_th.png);
 }
 
 .neutral .second-thead, .neutral .second-thead:hover td, .neutral .block_in_wrapper, .neutral .inwrapper li:hover, .neutral .tableend, .neutral .paging {
-	background: url(../images/tables-neutral-sechead.png);
+	background: url(../images/bg_th.png);
 }
 
 .neutral .color-a, .neutral .staterow {
-	background: url(../images/tables-neutral-bg-a.png);
+	background: url(../images/tables-tasks-bg-a.png);
 }
 
 .neutral .color-b, .neutral .content_in_wrapper {
@@ -2504,8 +2489,8 @@ th.tools, td.tools {
 }
 
 .neutral .block, .neutral a, .neutral h1, .neutral .block .tablemenue, .neutral .block .addmenue, .neutral p.tags-miles, .neutral .block_in_wrapper h2 {
-	border-color: #6f6d6e;
-	color: #6f6d6e;
+	border-color: #96B4DE;
+	color: #4566A4;
 }
 
 .neutral h1 span, .neutral h1 span a {
@@ -2513,38 +2498,38 @@ th.tools, td.tools {
 }
 
 .neutral h1 span a {
-	border-color: #6f6d6e;
+	border-color: #96B4DE;
 }
 
 .neutral form, .neutral form input, .neutral form select, .neutral form textarea, .neutral form .row .editor {
 	border-color: #a9a7a8;
-	color: #6f6d6e;
+	color: #96B4DE;
 }
 
 .neutral a.butn_link:hover, .neutral button:hover, .neutral form .fileinput:hover button, .neutral a.butn_link_active, .neutral .datepick .picker {
-	background: #4f4e4e;
+	background: #7F97BC;
 }
 
 /* TIMETRACKING COLORS #################################*/
 
 .timetrack .headline, .timetrack a.butn_link, .timetrack button, .timetrack a.butn_link_active:hover {
-	background: url(../images/tables-timetracking-head.png);
+	background: url(../images/bg_table.png);
 }
 
 .timetrack thead {
-	background: url(../images/tables-timetracking-thead.png);
+	background: url(../images/bg_th.png);
 }
 
 .timetrack .second-thead, .timetrack .second-thead:hover td, .timetrack .block_in_wrapper, .timetrack .inwrapper li:hover, .timetrack .tableend {
-	background: url(../images/tables-timetracking-sechead.png);
+	background: url(../images/bg_th.png);
 }
 
 .timetrack .color-a, .timetrack .datepick table td, .timetrack .datepick tr.head td {
-	background: url(../images/tables-timetracking-bg-a.png);
+	background: url(../images/tables-tasks-bg-a.png);
 }
 
 .timetrack .color-b, .timetrack .datepick td.wrong, .timetrack .datepick tr.weekday td {
-	background: url(../images/tables-timetracking-bg-b.png);
+	background: url(../images/tables-tasks-bg-B.png);
 }
 
 .timetrack .color-a ul.files table, .timetrack .color-b ul.files table {
@@ -2552,43 +2537,43 @@ th.tools, td.tools {
 }
 
 .timetrack .block, .timetrack a, .timetrack h1, .timetrack .block .tablemenue, .timetrack .block .addmenue, .timetrack p.tags-miles {
-	border-color: #8f5f45;
-	color: #8f5f45;
+	border-color: #96B4DE;
+	color: #4566A4;
 }
 
 .timetrack .datepick .cal, .timetrack .block_in_wrapper h2 {
-	color: #8f5f45;
+	color: #4566A4;
 }
 
 .timetrack h1 span, .timerack h1 span a, .timetrack .datepick td.wrong {
-	color: #bc9f8f;
+	color: #4566A4;
 }
 
 .timetrack h1 span a {
-	border-color: #8f5f45;
+	border-color: #96B4DE;
 }
 
 .timetrack form, .timetrack form input, .timetrack form select, .timetrack form textarea, .timetrack form .row .editor {
 	border-color: #bc9f8f;
-	color: #8f5f45;
+	color: #4566A4;
 }
 
 .timetrack a.butn_link:hover, .timetrack button:hover, .timetrack form .fileinput:hover button, .timetrack a.butn_link_active, .timetrack .datepick .picker {
-	background: #6f412c;
+	background: #7F97BC;
 }
 
 /* MILESTONES COLORS #################################*/
 
 .miles .headline, .miles a.butn_link, .miles button, .miles a.butn_link_active:hover, .miles .calinmenue ul {
-	background: url(../images/tables-miles-head.png);
+	background: url(../images/bg_table.png);
 }
 
 .miles thead, .miles .calhead th {
-	background: url(../images/tables-miles-thead.png);
+	background: url(../images/bg_th.png);
 }
 
 .miles .second-thead, .miles .block_in_wrapper, .miles .inwrapper li:hover, .miles .tableend, .miles .thecal, .miles .second-thead:hover td, .miles .statuswrapper li.link:hover {
-	background: url(../images/tables-miles-sechead.png);
+	background: url(../images/bg_th.png);
 }
 
 .miles .color-a, .miles table.thecal .dayhead th, .miles .calinmenue ul li.link a, .miles .datepick table td, .miles .datepick tr.head td, .miles .statuswrapper li {
@@ -2604,44 +2589,43 @@ th.tools, td.tools {
 }
 
 .miles, .miles a, .miles h1, .miles .block .tablemenue, .miles .block .addmenue, .miles p.tags-miles, .bigcal tbody.content td {
-	border-color: #824e48;
-	color: #824e48;
+	border-color: #96B4DE;
+	color: #4566A4;
 }
 
 .miles .block td.finished, .miles .block td.finished a, .miles .datepick .cal, .miles .block_in_wrapper h2 {
-	color: #824e48;
+	color: #4566A4;
 }
 
 .miles h1 span, .miles h1 span a, .miles .block td.othermonth a, .miles .block td.othermonth, .miles .datepick td.wrong {
-	color: #b49591;
+	color: #4566A4;
 }
 
 .miles h1 span a, .miles .content-spacer-b {
-	border-color: #824e48;
+	border-color: #96B4DE;
 }
 
 .miles form, .miles form input, .miles form select, .miles form textarea, .miles form .row .editor, .miles .statuswrapper li {
 	border-color: #b49591;
-	color: #824e48;
+	color: #4566A4;
 }
 
 .miles a.butn_link:hover, .miles button:hover, .miles form .fileinput:hover button, .miles a.butn_link_active, .miles .datepick .picker {
-	background: #62332e;
+	background: #7F97BC;
 }
 
 /* FILES COLORS #####################################*/
 
 .files .headline, .files a.butn_link, .files button, .files a.butn_link_active:hover, .files .inmenue a span, .files .moreinfo {
-	background: url(../images/tables-files-head.png);
+	background: url(../images/bg_table.png);
 }
 
 .files thead, .files .contenttitle {
-	background: url(../images/tables-files-thead.png);
+	background: url(../images/bg_th.png);
 }
 
 .files .second-thead, .files .second-thead:hover td, .files .block_in_wrapper, .files .inwrapper li:hover {
-	background: url(../images/tables-files-sechead.png);
-	cursor:move;
+	background: url(../images/bg_th.png);
 }
 
 .files .color-a, .files .datepick table td, .files .datepick tr.head td, .files .staterow {
@@ -2653,12 +2637,12 @@ th.tools, td.tools {
 }
 
 .files .block, .files .blockwrapper, .files a, .files h1, .files .tablemenue, .files .addmenue, .files p.tags-miles {
-	border-color: #484f64;
-	color: #484f64;
+	border-color: #96B4DE;
+	color: #4566A4;
 }
 
 .files .block td.finished, .files .block td.finished a, .files .datepick .cal, .files .block_in_wrapper h2 {
-	color: #484f64;
+	color: #4566A4;
 }
 
 .files h1 span, .files h1 span a, .files .datepick td.wrong {
@@ -2666,16 +2650,16 @@ th.tools, td.tools {
 }
 
 .files h1 span a {
-	border-color: #484f64;
+	border-color: #96B4DE;
 }
 
 .files form, .files form input, .files form select, .files form textarea, .files form .row .editor {
 	border-color: #9195a2;
-	color: #484f64;
+	color: #4566A4;
 }
 
 .files a.butn_link:hover, .files button:hover, .files form .fileinput:hover button, .files a.butn_link_active, .files .datepick .picker {
-	background: #2e3345;
+	background: #7F97BC;
 }
 
 /* ## ACCORDION ################ Toggle ############### */
@@ -2731,7 +2715,6 @@ a.butn_check, a.butn_checked, a.butn_reply {
 	background: url(../images/butn-check.png) no-repeat 4px 6px;
 }
 
-
 a.butn_check:hover, a.butn_checked, a.butn_reply:hover {
 	background-position: 4px -20px;
 }
@@ -2742,13 +2725,6 @@ a.butn_checked:hover {
 
 a.butn_reply {
 	background-image: url(../images/butn-reply.png);
-}
-
-a.butn_reply_active {
-	display: block;
-	width: 100%;
-	height: 27px;
-	background: url(../images/butn-reply.png) no-repeat 4px -20px;
 }
 
 a.tool_edit, a.tool_del {
