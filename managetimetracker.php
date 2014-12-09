@@ -339,7 +339,7 @@ if ($action == "add") {
 
 	//get open project tasks for filtering
     $task = new task();
-    $ptasks = $task->getProjectTasks($id,-1);
+    $ptasks = $task->getProjectTasks($id,false);
     $tracker = (object) new timetracker();
     //If the user can not read tt entries from other user, set the user filter to the current user id.
 	if (!$usr) {
@@ -351,9 +351,9 @@ if ($action == "add") {
     }
 
     if (!empty($start) and !empty($end)) {
-        $track = $tracker->getProjectTrack($id, $usr, $taski, $start, $end, 25);
+        $track = $tracker->getProjectTrack($id, $usr, $taski, $start, $end, 50);
     } else {
-        $track = $tracker->getProjectTrack($id, $usr, $taski, 0, 0, 25);
+        $track = $tracker->getProjectTrack($id, $usr, $taski, 0, 0, 50);
     }
     if (!empty($track)) {
         $totaltime = $tracker->getTotalTrackTime($track);

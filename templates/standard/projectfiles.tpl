@@ -65,17 +65,8 @@
 				{if $userpermissions.files.add}
 					<div id = "form_file" class="addmenue" style = "display:none;">
 						<div id = "newupload" style = "display:block">{include file="addfileform_new.tpl"}</div>
-						<!--[If IE]><div id = "newuploadIE" style = "display:block">{include file="addfileform.tpl"}</div><![endif]-->
-					</div>
+						</div>
 				{/if}
-				<!--[If IE]>
-				{literal}
-				<script type = "text/javascript">
-			$('newupload').innerHTML = "";
-				</script>
-				{/literal}
-				<![endif]-->
-
 				<div class="nosmooth" id="sm_files">
 					<div class="contenttitle" id = "dropDirUp" >
 						<div class="contenttitle_menue" >
@@ -86,7 +77,7 @@
 						</div>
 						<div style = "float:right;margin-right:3px;">
 						<form id = "typechose">
-							<select id = "fileviewtype" onchange = "changeFileview(this.value,$('folderparent').value);">
+							<select id = "fileviewtype" onchange = "changeFileview(this.value);">
 								<option value = "fileview" selected>{#gridview#}</option>
 								<option value = "fileview_list" >{#listview#}</option>
 							</select>
@@ -126,8 +117,17 @@
 </div> {*content-left END*}
 {literal}
 <script type = "text/javascript">
-function changeFileview(viewtype, folder)
+function changeFileview(viewtype)
 {
+	var folder;
+	try{
+		folder = $('folderparent').value;
+	}
+	catch(e)
+	{
+		folder = 0;
+	}
+
 	if(!folder)
 	{
 		folder = 0;
