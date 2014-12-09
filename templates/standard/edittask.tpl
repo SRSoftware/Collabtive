@@ -9,26 +9,26 @@
 
 			<div class="breadcrumb">
 				<a href="manageproject.php?action=showproject&amp;id={$project.ID}" title="{$projectname}">
-					<img src="./templates/standard/images/symbols/projects.png" alt="" />
+					<img src="./templates/{$settings.template}/theme/{$settings.theme}/images/symbols/projects.png" alt="" />
 					{$projectname|truncate:25:"...":true}
 				</a>
 				<a href="managetask.php?action=showproject&amp;id={$project.ID}">
-					<img src="./templates/standard/images/symbols/tasklist.png" alt="" />
+					<img src="./templates/{$settings.template}/theme/{$settings.theme}/images/symbols/tasklist.png" alt="" />
 					{#tasklists#}
 				</a>
 				<a href="managetasklist.php?action=showtasklist&id={$project.ID}&tlid={$task.liste}" title="{#tasklist#} / {$task.list}">
-					<img src="./templates/standard/images/symbols/tasklist.png" alt="" />
+					<img src="./templates/{$settings.template}/theme/{$settings.theme}/images/symbols/tasklist.png" alt="" />
 					{$task.list|truncate:25:"...":true}
 				</a>
 				<a href="managetask.php?action=showtask&amp;tid={$task.ID}&amp;id={$project.ID}" title="{#task#} / {$task.title}">
-					<img src="./templates/standard/images/symbols/tasklist.png" alt="" />
+					<img src="./templates/{$settings.template}/theme/{$settings.theme}/images/symbols/tasklist.png" alt="" />
 					{$task.title|truncate:50:"...":true}
 				</a>
 				<span>&nbsp;/...</span>
 			</div>
 
 			<h1 class="second">
-				<img src="./templates/standard/images/symbols/task.png" alt="" />
+				<img src="./templates/{$settings.template}/theme/{$settings.theme}/images/symbols/task.png" alt="" />
 				{$task.title|truncate:30:"...":true}
 			</h1>
 
@@ -156,7 +156,7 @@
 						<div class="row-butn-bottom">
 							<label>&nbsp;</label>
 							<button type="submit" onfocus="this.blur();">{$langfile.send}</button>
-							<button onclick="blindtoggle('form_edit');toggleClass('edit_butn','edit-active','edit');toggleClass('sm_task','smooth','nosmooth');return false;" onfocus="this.blur();" {if $showhtml != "no"}style="display:none;"{/if}>{$langfile.cancel}</button>
+							<button type="reset" onclick="blindtoggle('form_edit');toggleClass('edit_butn','edit-active','edit');toggleClass('sm_task','smooth','nosmooth');return false;" onfocus="this.blur();" {if $showhtml != "no"}style="display:none;"{/if}>{$langfile.cancel}</button>
 						</div>
 
 					</fieldset>
