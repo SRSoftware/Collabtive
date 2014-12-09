@@ -54,9 +54,14 @@ if ($action == "upload") {
     $num = $_POST['numfiles'];
 
     if ($upfolder) {
-        $thefolder = $myfile->getFolder($upfolder);
-        $thefolder = $thefolder["name"];
-        $upath = "files/" . CL_CONFIG . "/$id/" . $thefolder;
+    	$thefolder = $myfile->getFolder($upfolder);
+    	$absfolder = $myfile->getAbsolutePathName($thefolder);
+    	if($absfolder == "/")
+    	{
+    		$absfolder = "";
+    	}
+    	$thefolder = $thefolder["name"];
+    	$upath = "files/" . CL_CONFIG . "/$id" . $absfolder;
     } else {
         $upath = "files/" . CL_CONFIG . "/$id";
         $upfolder = 0;
@@ -80,18 +85,30 @@ if ($action == "upload") {
             }
             foreach($users as $user) {
                 if (!empty($user["email"])) {
+                    $userlang=readLangfile($user['locale']);
+
+                    // check if subfolder exists, else root folder
+                    $whichfolder = (!empty($thefolder)) ? $thefolder : $userlang["rootdir"];
+
+                    // assemble content only once. no need to do this repeatedly
+                    $mailcontent = $userlang["hello"] . ",<br /><br/>" .
+                                   $userlang["filecreatedtext"] . "<br /><br />" .
+                                   $userlang["project"] . ": " . $pname["name"] . "<br />" .
+                                   $userlang["folder"] . ": " . $whichfolder . "<br />" .
+                                   $userlang["file"] . ":  <a href = \"" . $url . $fileprops["datei"] . "\">" . $url . $fileprops["datei"] . "</a>";
+
+                    $subject = $userlang["filecreatedsubject"] . " (". $userlang['by'] . ' '. $username . ")";
+
                     if (is_array($sendto)) {
                         if (in_array($user["ID"], $sendto)) {
-                            // check if subfolder exists, else root folder
-                            $whichfolder = (!empty($thefolder)) ? $thefolder : $langfile["rootdir"];
                             // send email
                             $themail = new emailer($settings);
-                            $themail->send_mail($user["email"], $langfile["filecreatedsubject"], $langfile["hello"] . ",<br /><br/>" . $langfile["filecreatedtext"] . "<br /><br />" . $langfile["project"] . ": " . $pname["name"] . "<br />" . $langfile["folder"] . ": " . $whichfolder . "<br />" . $langfile["file"] . ":  <a href = \"" . $url . $fileprops["datei"] . "\">" . $url . $fileprops["datei"] . "</a>");
+                            $themail->send_mail($user["email"], $subject, $mailcontent);
                         }
                     } else {
                         // send email
                         $themail = new emailer($settings);
-                        $themail->send_mail($user["email"], $langfile["filecreatedsubject"], "");
+                        $themail->send_mail($user["email"], $subject, $mailcontent); // why was there no content before?
                     }
                 }
             }
@@ -109,8 +126,13 @@ if ($action == "upload") {
     }
     if ($upfolder) {
         $thefolder = $myfile->getFolder($upfolder);
+    	$absfolder = $myfile->getAbsolutePathName($thefolder);
+    	if($absfolder == "/")
+    	{
+    		$absfolder = "";
+    	}
         $thefolder = $thefolder["name"];
-        $upath = "files/" . CL_CONFIG . "/$id/" . $thefolder;
+        $upath = "files/" . CL_CONFIG . "/$id" . $absfolder;
     } else {
         $upath = "files/" . CL_CONFIG . "/$id";
         $upfolder = 0;
@@ -134,18 +156,30 @@ if ($action == "upload") {
             }
             foreach($users as $user) {
                 if (!empty($user["email"])) {
+                    $userlang=readLangfile($user['locale']);
+
+                    // check if subfolder exists, else root folder
+                    $whichfolder = (!empty($thefolder)) ? $thefolder : $userlang["rootdir"];
+
+                    // assemble content only once. no need to do this repeatedly
+                    $mailcontent = $userlang["hello"] . ",<br /><br/>" .
+                                   $userlang["filecreatedtext"] . "<br /><br />" .
+                                   $userlang["project"] . ": " . $pname["name"] . "<br />" .
+                                   $userlang["folder"] . ": " . $whichfolder . "<br />" .
+                                   $userlang["file"] . ":  <a href = \"" . $url . $fileprops["datei"] . "\">" . $url . $fileprops["datei"] . "</a>";
+
+                    $subject = $userlang["filecreatedsubject"] . " (". $userlang['by'] . ' '. $username . ")";
+
                     if (is_array($sendto)) {
                         if (in_array($user["ID"], $sendto)) {
-                            // check if subfolder exists, else root folder
-                            $whichfolder = (!empty($thefolder)) ? $thefolder : $langfile["rootdir"];
                             // send email
                             $themail = new emailer($settings);
-                            $themail->send_mail($user["email"], $langfile["filecreatedsubject"], $langfile["hello"] . ",<br /><br/>" . $langfile["filecreatedtext"] . "<br /><br />" . $langfile["project"] . ": " . $pname["name"] . "<br />" . $langfile["folder"] . ": " . $whichfolder . "<br />" . $langfile["file"] . ":  <a href = \"" . $url . $fileprops["datei"] . "\">" . $url . $fileprops["datei"] . "</a>");
+                            $themail->send_mail($user["email"], $subject, $mailcontent);
                         }
                     } else {
                         // send email
                         $themail = new emailer($settings);
-                        $themail->send_mail($user["email"], $langfile["filecreatedsubject"], "");
+                        $themail->send_mail($user["email"], $subject, $mailcontent);
                     }
                 }
             }
@@ -280,11 +314,8 @@ if ($action == "upload") {
     $name = getArrayVal($_POST, "foldertitle");
     $desc = getArrayVal($_POST, "folderdesc");
     $parent = getArrayVal($_POST, "folderparent");
-    $visible = getArrayVal($_POST, "visible");
-    if (empty($visible[0])) {
-        $visible = "";
-    }
-    if ($myfile->addFolder($parent, $id, $name, $desc, $visible)) {
+
+    if ($myfile->addFolder($parent, $id, $name, $desc)) {
         $loc = $url .= "managefile.php?action=showproject&id=$id&mode=folderadded";
         header("Location: $loc");
     }
