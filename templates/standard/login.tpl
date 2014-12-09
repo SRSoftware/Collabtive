@@ -43,6 +43,12 @@
 				
 			</div>
 
+      <div class="openidpages">
+        {foreach item=company from=$companies}
+//       <a href="test">Test</a>
+        {/foreach}
+      </div>
+
 			{if $loginerror == 1}
 				<div class="login-alert timetrack">
 					{#loginerror#}

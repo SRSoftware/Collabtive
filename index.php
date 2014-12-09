@@ -5,6 +5,8 @@ if (!isset($_SESSION["userid"])) {
     $template->assign("loginerror", 0);
     $mode = getArrayVal($_GET, "mode");
     $template->assign("mode", $mode);
+    include 'config/openid-logins/companies.php';
+    $template->assign('companies',$mode);
     $template->display("login.tpl");
     die();
 }
