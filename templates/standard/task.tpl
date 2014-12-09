@@ -3,7 +3,7 @@
 
 <div id="content-left">
 	<div id="content-left-in">
-	
+
 		<div class="tasks">
 			<div class="breadcrumb">
 				<a href="manageproject.php?action=showproject&amp;id={$project.ID}"><img src="./templates/standard/images/symbols/projects.png" alt="" />{$projectname|truncate:40:"...":true}</a>
@@ -28,10 +28,11 @@
 						<li class="link"><a class="edit" href="javascript:void(0);" id="edit_butn" onclick="blindtoggle('form_edit');toggleClass(this,'edit-active','edit');toggleClass('sm_task','smooth','nosmooth');" title="{#edit#}"></a></li>
 					{/if}
 					<li><a>{#user#}: {$task.user|truncate:25:"...":true}</a></li>
+					<li><a>{#start#}: {$task.startstring}</a></li>
 					<li><a>{#end#}: {$task.endstring}</a></li>
 				</ul>
 			</div>
-	
+
 			{*Edit Task*}
 			{if $userpermissions.tasks.edit}
 				<div id="form_edit" class="addmenue" style="display:none;clear:both;">
@@ -39,9 +40,9 @@
 					{include file="edittask.tpl" showhtml="no"}
 				</div>
 			{/if}
-	
+
 			<div class="content-spacer"></div>
-		
+
 			<div class="nosmooth" id="sm_task">
 				<div id="descript" class="descript">
 					<h2>{#description#}</h2>
@@ -49,7 +50,7 @@
 					<div class="content-spacer"></div>
 				</div>
 			</div>
-	
+
 		</div> {*Tasks END*}
 	</div> {*content-left-in END*}
 </div> {*content-left END*}
