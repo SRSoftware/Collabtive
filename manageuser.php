@@ -10,6 +10,8 @@ $mode = getArrayVal($_GET, "mode");
 if ($action != "login" and $action != "logout" and $action != "resetpassword" and $action != "loginerror") {
     if (!isset($_SESSION["userid"])) {
         $template->assign("loginerror", 0);
+        include 'config/openid-logins/companies.php';
+        $template->assign('companies',$companies);        
         $template->display("login.tpl");
         die();
     }
