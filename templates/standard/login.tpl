@@ -44,8 +44,13 @@
 			</div>
 
       <div class="openidpages">
+        {#OpenIDlogintext#}
         {foreach item=company from=$companies}
-//       <a href="test">Test</a>
+        <a href="manageuser.php?action=login&openid={$company[2]}">
+          <div class="company">
+            <img src="{$company[1]}" alt="{$company[0]}"/>
+          </div>
+        </a>
         {/foreach}
       </div>
 

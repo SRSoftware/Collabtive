@@ -2,7 +2,7 @@
 ini_set("arg_separator.output", "&amp;");
 ini_set('default_charset', 'utf-8');
 // Set content security policy header. This instructs the browser to block various unsafe behaviours.
-header("Content-Security-Policy:default-src 'self'; style-src 'self' 'unsafe-inline'; script-src 'self' 'unsafe-inline' 'unsafe-eval';frame-src 'self'");
+header("Content-Security-Policy:default-src 'self'; style-src 'self' 'unsafe-inline'; script-src 'self' 'unsafe-inline' 'unsafe-eval';frame-src 'self'; img-src *;");
 // Start output buffering with gzip compression and start the session
 ob_start('ob_gzhandler');
 session_start();

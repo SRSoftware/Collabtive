@@ -130,6 +130,21 @@ td.message ul {
 	margin: 8px 0 18px 0;
 }
 
+.openidpages{
+	padding-top: 50px;
+	color: #082343;
+  text-align: center;
+  font-size: 15px;
+  font-weight: bold;
+}
+
+.company{
+	padding-top: 10px;
+	width: 100%;
+	overflow: hidden;	
+	text-align: center;
+}
+
 /* ## LOGIN-Elements ############## END ############# */
 
 
