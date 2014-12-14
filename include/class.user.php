@@ -370,6 +370,7 @@ class user {
                     $_SESSION['userlocale'] = $chk['locale'];
                     $_SESSION['usergender'] = $chk['gender'];
                     $_SESSION["userpermissions"] = $rolesobj->getUserRole($chk["ID"]);
+                    $_SESSION['openid'] = $identity;
 
                     $userid = $_SESSION['userid'];
                     $seid = session_id();

@@ -68,7 +68,15 @@
 			</div>
 		</div>
 	{/if}
-
+	
+	{*Open3a*}
+	{if isset($openid) }
+  <div class="content-right-in">
+      <h2>{#faktura#}</h2>
+      <a href="../faktura/openid_login?openid={$openid}">{#open3alink#}</a>
+  </div>
+  {/if}
+  
 	{*Onlinelist*}
 	<div class="content-right-in">
 			<h2><a id="onlinelisttoggle" class="win-up" href="javascript:blindtoggle('onlinelist');toggleClass('onlinelisttoggle','win-up','win-down');">{#usersonline#}</a></h2>
@@ -77,6 +85,8 @@
 
 			</div>
 	</div>
+	
+
 
 
 		{literal}
