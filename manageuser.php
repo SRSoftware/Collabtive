@@ -99,6 +99,8 @@ if ($action == "loginerror") {
     }
     // Login Error
     else {
+    		include 'config/openid-logins/companies.php';
+    		$template->assign('companies',$companies);    	 
         $template->assign("loginerror", 1);
         $template->assign("mailnotify", $settings["mailnotify"]);
         $template->display("login.tpl");
