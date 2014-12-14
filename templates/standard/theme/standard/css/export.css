@@ -226,6 +226,14 @@
 	background-position: -69px -31px;	
 }
 
+.export-main a.open3a {
+  background-position: -69px 0; 
+}
+
+.export-main a.open3a:hover {
+  background-position: -69px -31px; 
+}
+
 .export-main a.vcardmale {
 	width: 28px;	
 	background-position: -32px 0;	

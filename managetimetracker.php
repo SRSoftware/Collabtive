@@ -190,6 +190,55 @@ if ($action == "add") {
             echo "ok";
         }
     }
+} elseif ($action == "open3Atime") {
+    	if (!chkproject($userid, $id)) {
+    		$errtxt = $langfile["notyourproject"];
+    		$noperm = $langfile["accessdenied"];
+    		$template->assign("errortext", "$errtxt<br>$noperm");
+    		$template->assign("mode", "error");
+    		$template->display("error.tpl");
+    		die();
+    	}
+    	
+    	$project = new project();
+    	$proj = $project->getProject($id);
+    	$desc=$proj['desc'];
+    	$pos=strpos($desc, "Kundennummer");
+    	if ($pos !== false){
+    		$desc=substr($desc,$pos+12);
+    		while (strlen($desc)>0 && !is_numeric(substr($desc,0,1))){
+    			$desc=substr($desc,1);
+    		}
+    		if (strlen($desc)>0){
+    			$len=0;
+    			while (is_numeric(substr($desc, 0,$len+1))){
+    				$len += 1;
+    			}
+    			$knr = substr($desc,0,$len);
+    			
+    			if (!empty($start) and !empty($end)) {
+    				$track = $tracker->getProjectTrack($id, $usr, $taski, $start, $end, false);
+    			} else {
+    				$track = $tracker->getProjectTrack($id, $usr , $taski, 0, 0, false);
+    			}
+    			 
+	    		
+	    		if (!empty($track)) {
+
+	    			foreach($track as $tra) {
+	    				$myArr = array($tra["uname"], $tra["tname"], $tra["comment"], $tra["daystring"], $tra["startstring"], $tra["endstring"], $tra["hours"]);
+	    				// write to database here
+	    				 
+	    			}
+	    		}
+	    		header('Location: .');
+	    		die();
+    		}
+    	}
+    	$template->assign("errortext", "Keine Kundennummer in Projektbeschreibung gefunden.");
+    	$template->assign("mode", "error");
+    	$template->display("error.tpl");
+    	die();    	
 } elseif ($action == "projectxls") {
     if (!chkproject($userid, $id)) {
         $errtxt = $langfile["notyourproject"];
