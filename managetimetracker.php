@@ -224,7 +224,11 @@ if ($action == "add") {
     			 
 	    		
 	    		if (!empty($track)) {
-
+						
+	    			$open3a = new open3a();
+	    			
+	    			$open3a->createBillFor($track,$knr);
+	    			die();
 	    			foreach($track as $tra) {
 	    				$myArr = array($tra["uname"], $tra["tname"], $tra["comment"], $tra["daystring"], $tra["startstring"], $tra["endstring"], $tra["hours"]);
 	    				// write to database here
