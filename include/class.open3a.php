@@ -16,7 +16,7 @@ class open3a {
 	 * Initialisiert den Eventlog
 	 */
 	function __construct() {
-		include CL_ROOT.'/config/open3a/db.php';
+		include CL_ROOT.'/config/open3a/config.php';
 		$this->conn = new PDO("mysql:host=$db_host;dbname=$db_name;charset=utf8", $db_user, $db_pass);
 	}
 	
@@ -30,9 +30,11 @@ class open3a {
 	}
 	
 	function createBillFor($timetrack,$customer){
-		print $this->getTemplate();
-		return;
-		$stmt = $this->conn->prepare('SELECT ownTemplate FROM Stammdaten');
+		$template=$this->getTemplate();
+		$
+		$stmt = $this->conn->prepare('INSERT INTO Auftrag (AdresseID, auftragdatum, kundennummer, ')
+		
+		$stmt = $this->conn->prepare('SELECT * FROM Auftrag');
 		$res=$stmt->execute();
 		while ($projekt = $stmt->fetch()) {
 			print_r($projekt);
