@@ -10,6 +10,16 @@
  * @license http://opensource.org/licenses/gpl-license.php GNU General Public License v3 or later
  */
 class project {
+    private $mylog;
+
+    /**
+     * Konstruktor
+     * Initialisiert den Eventlog
+     */
+    function __construct()
+    {
+        $this->mylog = new mylog;
+    }
 
     /**
      * Add a project
@@ -41,7 +51,7 @@ class project {
         }
         if ($ins1) {
             mkdir(CL_ROOT . "/files/" . CL_CONFIG . "/$insid/", 0777);
-            $mylog->add($name, 'projekt', 1, $insid);
+            $this->mylog->add($name, 'projekt', 1, $insid);
             return $insid;
         } else {
             return false;
@@ -70,7 +80,7 @@ class project {
         $upd = $updStmt->execute(array($name, $desc, $end, $budget, $id));
 
         if ($upd) {
-            $mylog->add($name, 'projekt' , 2, $id);
+            $this->mylog->add($name, 'projekt' , 2, $id);
             return true;
         } else
             return false;
@@ -118,7 +128,7 @@ class project {
 
         delete_directory(CL_ROOT . "/files/" . CL_CONFIG . "/$id");
         if ($del) {
-            $mylog->add($userid, 'projekt', 3, $id);
+            $this->mylog->add($userid, 'projekt', 3, $id);
             return true;
         } else {
             return false;
@@ -142,7 +152,7 @@ class project {
 		if ($upd) {
             $nam = $conn->query("SELECT name FROM projekte WHERE ID = $id")->fetch();
             $nam = $nam[0];
-            $mylog->add($nam, 'projekt', 4, $id);
+            $this->mylog->add($nam, 'projekt', 4, $id);
             return true;
         } else {
             return false;
@@ -193,7 +203,7 @@ class project {
 		if ($upd) {
             $nam = $conn->query("SELECT name FROM projekte WHERE ID = $id")->fetch();
             $nam = $nam[0];
-            $mylog->add($nam, 'projekt', 5, $id);
+            $this->mylog->add($nam, 'projekt', 5, $id);
             return true;
         } else {
             return false;
@@ -216,7 +226,7 @@ class project {
         if ($ins) {
             $userObj = new user();
             $user = $userObj->getProfile($user);
-            $mylog->add($user["name"], 'user', 6, $id);
+            $this->mylog->add($user["name"], 'user', 6, $id);
             return true;
         } else {
             return false;
@@ -268,7 +278,7 @@ class project {
         if ($del) {
             $userObj = new user();
             $user = $userObj->getProfile($user);
-            $mylog->add($user["name"], 'user', 7, $id);
+            $this->mylog->add($user["name"], 'user', 7, $id);
             return true;
         } else {
             return false;
@@ -360,17 +370,14 @@ class project {
 
         $myprojekte = array();
         $user = (int) $user;
-    	$status = (int) $status;
+      	$status = (int) $status;
 
-        $sel = $conn->prepare("SELECT projekt FROM projekte_assigned WHERE user = ? ORDER BY ID ASC");
-        $selStmt = $sel->execute(array($user));
+        $sel = $conn->prepare('SELECT projekte.ID as ID FROM projekte RIGHT JOIN projekte_assigned on (projekte.ID = projekte_assigned.projekt) WHERE user = ? AND status = ? ORDER BY ID ASC');
+        $selStmt = $sel->execute(array($user,$status));
 
-    	$projektStmt = $conn->prepare("SELECT ID FROM projekte WHERE ID = ? AND status=?");
-        while ($projs = $sel->fetch()) {
-        	$projektStmt->execute(array($projs[0],$status));
-        	$projekt = $projektStmt->fetch();
-            if ($projekt) {
-                $project = $this->getProject($projekt["ID"]);
+        while ($db_projekt = $sel->fetch()) {
+            if ($db_projekt) {
+                $project = $this->getProject($db_projekt["ID"]);
                 array_push($myprojekte, $project);
             }
         }

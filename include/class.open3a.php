@@ -41,16 +41,33 @@ class open3a {
 		$stmt->closeCursor();
 	}
 	
+	function getDefaultInvoiceTexts(){
+		$stmt = $this->conn->prepare('SELECT KategorieID,text FROM Textbaustein WHERE isRStandard=1');
+		$res=$stmt->execute();
+		$texts=array();
+		while ($data = $stmt->fetch()){
+			$kat=$data['KategorieID'];
+			$texts[$kat]=$data['text'];
+		}
+		$stmt->closeCursor();
+		return $texts;
+	}
+	
 	function createBillFor($timetrack,$customer){
 		$template=$this->getTemplate();
 		$adr_id=$this->getAdressForCustomer($customer);
+		
+		$texts=$this->getDefaultInvoiceTexts();
+		print_r($texts);
+		die();
+		
 		$user = $this->open3aUser;		
 		$stmt = $this->conn->prepare('INSERT INTO Auftrag (AdresseID, auftragdatum, kundennummer, UserID, AuftragVorlage, AuftragStammdatenID) VALUES (?,?,?,?,?,?)');
 		$stmt->execute(array($adr_id,time(),$customer,$this->open3aUser,$template,1));
 		if ($res=$stmt->execute()){
 			$id=$this->conn->lastInsertId();
 			
-			//$stmt = $this->conn->prepare('INSERT INTO GRLBM (AuftragID,datum,isR)');
+			$stmt = $this->conn->prepare('INSERT INTO GRLBM (AuftragID,datum,isR)');
 		}
 	}
 }
