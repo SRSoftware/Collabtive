@@ -3,4 +3,5 @@ $db_host = 'localhost';
 $db_name = '';
 $db_user = '';
 $db_pass = '';
+$user_id = 0; // enter the number of the user, to which the imports shall be assigned.
 ?>

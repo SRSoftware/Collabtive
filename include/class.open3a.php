@@ -18,28 +18,40 @@ class open3a {
 	function __construct() {
 		include CL_ROOT.'/config/open3a/config.php';
 		$this->conn = new PDO("mysql:host=$db_host;dbname=$db_name;charset=utf8", $db_user, $db_pass);
+		$this->open3aUser=$user_id;
 	}
 	
 	function getTemplate(){
 		$stmt = $this->conn->prepare('SELECT ownTemplate FROM Stammdaten');
-		$res=$stmt->execute();
+		$res=$stmt->execute();		
 		if ($data = $stmt->fetch()) {
+			$stmt->closeCursor();
 			return $data['ownTemplate'];
 		}
-		
+		$stmt->closeCursor();
+	}
+	
+	function getAdressForCustomer($customer_id){
+		$stmt = $this->conn->prepare('SELECT AdresseID FROM Kappendix WHERE kundennummer = ?');
+		$res=$stmt->execute(array($customer_id));		
+		if ($data = $stmt->fetch()) {
+			$stmt->closeCursor();
+			return $data['AdresseID'];
+		}
+		$stmt->closeCursor();
 	}
 	
 	function createBillFor($timetrack,$customer){
 		$template=$this->getTemplate();
-		$
-		$stmt = $this->conn->prepare('INSERT INTO Auftrag (AdresseID, auftragdatum, kundennummer, ')
-		
-		$stmt = $this->conn->prepare('SELECT * FROM Auftrag');
-		$res=$stmt->execute();
-		while ($projekt = $stmt->fetch()) {
-			print_r($projekt);
-    }
-		
+		$adr_id=$this->getAdressForCustomer($customer);
+		$user = $this->open3aUser;		
+		$stmt = $this->conn->prepare('INSERT INTO Auftrag (AdresseID, auftragdatum, kundennummer, UserID, AuftragVorlage, AuftragStammdatenID) VALUES (?,?,?,?,?,?)');
+		$stmt->execute(array($adr_id,time(),$customer,$this->open3aUser,$template,1));
+		if ($res=$stmt->execute()){
+			$id=$this->conn->lastInsertId();
+			
+			//$stmt = $this->conn->prepare('INSERT INTO GRLBM (AuftragID,datum,isR)');
+		}
 	}
 }
 
