@@ -227,16 +227,15 @@ if ($action == "add") {
 						
 	    			$open3a = new open3a();
 	    			
-	    			$open3a->createBillFor($track,$knr);
-	    			die();
-	    			foreach($track as $tra) {
-	    				$myArr = array($tra["uname"], $tra["tname"], $tra["comment"], $tra["daystring"], $tra["startstring"], $tra["endstring"], $tra["hours"]);
-	    				// write to database here
-	    				 
+	    			if ($open3a->createBillFor($track,$knr)){
+	    				header('Location: '.$open3a->location());	    				 
+	    			} else {
+	    				$template->assign("errortext", "Fehler beim Anlegen der Rechnung!");
+	    				$template->assign("mode", "error");
+	    				$template->display("error.tpl");
+	    				die();
 	    			}
 	    		}
-	    		header('Location: .');
-	    		die();
     		}
     	}
     	$template->assign("errortext", "Keine Kundennummer in Projektbeschreibung gefunden.");

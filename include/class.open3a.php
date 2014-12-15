@@ -19,6 +19,7 @@ class open3a {
 		include CL_ROOT.'/config/open3a/config.php';
 		$this->conn = new PDO("mysql:host=$db_host;dbname=$db_name;charset=utf8", $db_user, $db_pass);
 		$this->open3aUser=$user_id;
+		$this->location=$location;
 	}
 	
 	function warn($message){
@@ -26,6 +27,10 @@ class open3a {
 			$this->warnings=array();
 		}
 		$warnings[]=$message;
+	}
+	
+	function location(){
+		return $this->location;
 	}
 	
 	function getTemplate(){
@@ -82,6 +87,12 @@ class open3a {
 		}
 		$stmt->closeCursor();
 		return $num;
+	}
+	
+	function increaseNumber(){
+		$stmt = $this->conn->prepare('UPDATE Userdata SET wert = wert+1 WHERE name="belegNummerNextR"');
+		$stmt->execute();
+		$stmt->closeCursor();
 	}
 	
 	function getInvoicePrefix(){
@@ -145,8 +156,11 @@ class open3a {
 			$stmt = $this->conn->prepare('INSERT INTO GRLBM (AuftragID,datum,isR,nummer,textbausteinOben,textbausteinUnten,zahlungsbedingungen,lieferDatum,prefix,textbausteinObenID,textbausteinUntenID,zahlungsbedingungenID,GRLBMpayedVia) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?)');
 			$success = $stmt->execute(array($auftrag_id,time(),1,$belegnummer,$texts[2]['tx'],$texts[3]['tx'],$texts[1]['tx'],time(),$prefix,$texts[2]['id'],$texts[3]['id'],$texts[1]['id'],'transfer'));
 			if ($success){
+				
 				$grlbm_id=$this->conn->lastInsertId();
 				$stmt->closeCursor();
+				$this->increaseNumber();
+				
 				$stmt=$this->conn->prepare('INSERT INTO Posten (name,gebinde,GRLBMID,preis,menge,mwst,artikelnummer,beschreibung,bruttopreis) VALUES (?,?,?,?,?,?,?,?,?)');
 				foreach ($timetrack as $track){
 					$comment=trim(strip_tags($track['comment']));
@@ -172,12 +186,12 @@ class open3a {
 						print_r($stmt->errorInfo());
 						die();
 					}
-				}
-				print "success";								
-				return;
+				}												
+				return true;
 			}
 		}
-		print_r($stmt->errorInfo());		
+		print_r($stmt->errorInfo());
+		return false;		
 	}
 }
 
