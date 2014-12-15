@@ -101,9 +101,10 @@ class open3a {
 			warn('Number format not set!');
 			return null;
 		}
-		$prefix=$this->getInvoicePrefix();
 		$next=$this->readNextNumber();
-		
+		if ($next==null){
+			$next=1;
+		}
 		$replace = array(
 				"{J}" => date("Y"),
 				"{J2}" => date("y"),
@@ -123,7 +124,7 @@ class open3a {
 			$format = str_replace($matches[0], $useNext, $format);
 		}
 		
-		return $prefix.$format;
+		return $format;
 	}
 	
 	function createBillFor($timetrack,$customer){
@@ -146,7 +147,7 @@ class open3a {
 			$id=$this->conn->lastInsertId();
 			
 			$stmt = $this->conn->prepare('INSERT INTO GRLBM (AuftragID,datum,isR,nummer,textbausteinOben,textbausteinUnten,zahlungsbedingungen,lieferDatum,prefix,textbausteinObenID,textbausteinUntenID,zahlungsbedingungenID,GRLBMpayedVia)');
-//			$stmt->execute($id,time(),1,/*TODO*/,'transfer');
+//			$stmt->execute($id,time(),1,$belegnummer,/*TODO*/,'transfer');
 		}
 	}
 }
