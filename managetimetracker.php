@@ -200,44 +200,51 @@ if ($action == "add") {
     		die();
     	}
     	
+    	/* get project data */
     	$project = new project();
     	$proj = $project->getProject($id);
-    	$desc=$proj['desc'];    	
-    	$knrpos=strpos($desc, "Kundennummer");
-    	if ($knrpos !== false){
-    		$knrdesc=substr($desc,$knrpos+12);
-    		while (strlen($knrdesc)>0 && !is_numeric(substr($knrdesc,0,1))){
-    			$knrdesc=substr($knrdesc,1);
+    	$project_description=$proj['desc'];
+
+    	/* grep for customer number */
+    	$customer_number_pos=strpos($project_description, "Kundennummer");
+    	if ($customer_number_pos !== false){
+    		$customer_number_description=substr($project_description,$customer_number_pos+12);
+    		while (strlen($customer_number_description)>0 && !is_numeric(substr($customer_number_description,0,1))){
+    			$customer_number_description=substr($customer_number_description,1);
     		}
-    		if (strlen($knrdesc)>0){
+    		if (strlen($customer_number_description)>0){
     			$len=0;
-    			while (is_numeric(substr($knrdesc, 0,$len+1))){
+    			while (is_numeric(substr($customer_number_description, 0,$len+1))){
+    				if ($len>=strlen($customer_number_description)){
+    					break;
+    				}
     				$len += 1;
     			}
-    			$knr = substr($knrdesc,0,$len);
+    			$customer_number = substr($customer_number_description,0,$len);
     			
-    			
-    			$pricepos=strpos($desc,"Stundensatz");
+    			/* grep for wage per hour */
+    			$wage_pos=strpos($project_description,"Stundensatz");
     			$hourly_wage=null;    	
-    			if ($pricepos !== false){
-    				$pricedesc=substr($desc,$pricepos+11);
-    				while (strlen($pricedesc)>0 && !is_numeric(substr($pricedesc,0,1))){
-    					$pricedesc=substr($pricedesc,1);
+    			if ($wage_pos !== false){
+    				$wage_description=substr($project_description,$wage_pos+11);
+    				while (strlen($wage_description)>0 && !is_numeric(substr($wage_description,0,1))){
+    					$wage_description=substr($wage_description,1);
     				}
-    				if (strlen($pricedesc)>0){
+    				if (strlen($wage_description)>0){
     					$len=0;
-    					$char=substr($pricedesc, 0,$len+1);
+    					$char=substr($wage_description, 0,$len+1);
     					while ($char=='.' || $char=',' || is_numeric(char)){
-    					  if ($len>=strlen($pricedesc)){
+    					  if ($len>=strlen($wage_description)){
     							break;
     						}
     						$len += 1;
-    						$char=substr($pricedesc, 0,$len+1);
+    						$char=substr($wage_description, 0,$len+1);
     					}
-    					$hourly_wage = substr($pricedesc,0,$len);
+    					$hourly_wage = substr($wage_description,0,$len);
     				}
     			}
     			
+    			/* get project track */
     			if (!empty($start) and !empty($end)) {
     				$track = $tracker->getProjectTrack($id, $usr, $taski, $start, $end, false);
     			} else {
@@ -245,10 +252,10 @@ if ($action == "add") {
     			}
     			 
 	    		
-	    		if (!empty($track)) {
-						
+	    		if (!empty($track)) {						
+	    			/* export timetrack as open3a invoice */
 	    			$open3a = new open3a();	    			
-	    			if ($open3a->createBillFor($track,$knr,$hourly_wage)){
+	    			if ($open3a->createBillFor($track,$customer_number,$hourly_wage)){
 	    				header('Location: '.$open3a->location());	    				 
 	    			} else {
 	    				$template->assign("errortext", "Fehler beim Anlegen der Rechnung!");
