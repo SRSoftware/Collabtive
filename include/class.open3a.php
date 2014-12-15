@@ -58,16 +58,21 @@ class open3a {
 		$adr_id=$this->getAdressForCustomer($customer);
 		
 		$texts=$this->getDefaultInvoiceTexts();
-		print_r($texts);
+
+		$stmt=$this->conn->prepare('SELECT * FROM GRLBM');
+		$stmt->execute();
+		while ($data = $stmt->fetch()){
+			print_r($data);
+		}
 		die();
-		
 		$user = $this->open3aUser;		
 		$stmt = $this->conn->prepare('INSERT INTO Auftrag (AdresseID, auftragdatum, kundennummer, UserID, AuftragVorlage, AuftragStammdatenID) VALUES (?,?,?,?,?,?)');
 		$stmt->execute(array($adr_id,time(),$customer,$this->open3aUser,$template,1));
 		if ($res=$stmt->execute()){
 			$id=$this->conn->lastInsertId();
 			
-			$stmt = $this->conn->prepare('INSERT INTO GRLBM (AuftragID,datum,isR)');
+			$stmt = $this->conn->prepare('INSERT INTO GRLBM (AuftragID,datum,isR,nummer,textbausteinOben,textbausteinUnten,zahlungsbedingungen,lieferDatum,prefix,textbausteinObenID,textbausteinUntenID,zahlungsbedingungenID,GRLBMpayedVia)');
+			$stmt->execute($id,time(),1,/*TODO*/,'transfer');
 		}
 	}
 }
