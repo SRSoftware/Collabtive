@@ -165,6 +165,7 @@ class open3a {
 				$this->increaseNumber();
 				
 				$stmt=$this->conn->prepare('INSERT INTO Posten (name,gebinde,GRLBMID,preis,menge,mwst,artikelnummer,beschreibung,bruttopreis) VALUES (?,?,?,?,?,?,?,?,?)');
+				$brutto=round($preis+($mwst*$preis/100),3);
 				foreach ($timetrack as $track){
 					$comment=trim(strip_tags(html_entity_decode($track['comment'],0,'UTF-8')));
 					print $comment;
@@ -184,7 +185,8 @@ class open3a {
 					$hours=$track['hours'];
 					$user=$track['uname'];					
 					$task=($track['task']==0)?$short_comment:trim(strip_tags(html_entity_decode($track['tname'],0,'UTF-8')));
-					$brutto=round($preis+($mwst*$preis/100),3);
+					$comment='('.$day.') '.$comment;
+					
 					$success=$stmt->execute(array($task,'h',$grlbm_id,$preis,$hours,$mwst,'Timesheet',$comment,$brutto));
 					if (!$success){
 						print_r($stmt->errorInfo());
