@@ -128,6 +128,9 @@ class open3a {
 	}
 	
 	function createBillFor($timetrack,$customer){
+		$maxlen=25;
+		$preis=15.0;
+		$mwst=19.0;
 		$template=$this->getTemplate();
 		$adr_id=$this->getAdressForCustomer($customer);		
 		$texts=$this->getDefaultInvoiceTexts();
@@ -137,18 +140,44 @@ class open3a {
 		$stmt = $this->conn->prepare('INSERT INTO Auftrag (AdresseID, auftragdatum, kundennummer, UserID, AuftragVorlage, AuftragStammdatenID) VALUES (?,?,?,?,?,?)');
 		$success=$stmt->execute(array($adr_id,time(),$customer,$this->open3aUser,$template,1));
 		if ($success){
-			$id=$this->conn->lastInsertId();
+			$auftrag_id=$this->conn->lastInsertId();
 			$stmt->closeCursor();			
 			$stmt = $this->conn->prepare('INSERT INTO GRLBM (AuftragID,datum,isR,nummer,textbausteinOben,textbausteinUnten,zahlungsbedingungen,lieferDatum,prefix,textbausteinObenID,textbausteinUntenID,zahlungsbedingungenID,GRLBMpayedVia) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?)');
-			$success = $stmt->execute(array($id,time(),1,$belegnummer,$texts[2]['tx'],$texts[3]['tx'],$texts[1]['tx'],time(),$prefix,$texts[2]['id'],$texts[3]['id'],$texts[1]['id'],'transfer'));
+			$success = $stmt->execute(array($auftrag_id,time(),1,$belegnummer,$texts[2]['tx'],$texts[3]['tx'],$texts[1]['tx'],time(),$prefix,$texts[2]['id'],$texts[3]['id'],$texts[1]['id'],'transfer'));
 			if ($success){
-				print "success!";
-			} else {
-				print_r($stmt->errorInfo());
+				$grlbm_id=$this->conn->lastInsertId();
+				$stmt->closeCursor();
+				$stmt=$this->conn->prepare('INSERT INTO Posten (name,gebinde,GRLBMID,preis,menge,mwst,artikelnummer,beschreibung,bruttopreis) VALUES (?,?,?,?,?,?,?,?,?)');
+				foreach ($timetrack as $track){
+					$comment=trim(strip_tags($track['comment']));
+					if (strlen($comment)>$maxlen){
+						$pos=strpos($comment, ' ', $maxlen);
+						if ($pos === false){
+							$short_comment=$comment;
+						} else {
+							$short_comment=substr($comment,0,$pos ).'...';
+						}
+					} else {
+						$short_comment=$comment;
+					}
+					$day=$track['daystring'];
+					$start=$track['startstring'];
+					$end=$track['endstring'];
+					$hours=$track['hours'];
+					$user=$track['uname'];					
+					$task=($track['task']==0)?$short_comment:trim(strip_tags($track['tname']));
+					$brutto=round($preis+($mwst*$preis/100),3);
+					$success=$stmt->execute(array($task,'h',$grlbm_id,$preis,$hours,$mwst,'Timesheet',$comment,$brutto));
+					if (!$success){
+						print_r($stmt->errorInfo());
+						die();
+					}
+				}
+				print "success";								
+				return;
 			}
-		} else {
-			print_r($stmt->errorInfo());
 		}
+		print_r($stmt->errorInfo());		
 	}
 }
 
