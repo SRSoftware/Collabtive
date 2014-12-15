@@ -20,6 +20,7 @@ class open3a {
 		$this->conn = new PDO("mysql:host=$db_host;dbname=$db_name;charset=utf8", $db_user, $db_pass);
 		$this->open3aUser=$user_id;
 		$this->location=$location;
+		$this->defaultWage=$hourly_wage;
 	}
 	
 	function warn($message){
@@ -138,15 +139,17 @@ class open3a {
 		return $format;
 	}
 	
-	function createBillFor($timetrack,$customer){
+	function createBillFor($timetrack,$customer,$preis=null){
 		$maxlen=25;
-		$preis=15.0;
 		$mwst=19.0;
 		$template=$this->getTemplate();
 		$adr_id=$this->getAdressForCustomer($customer);		
 		$texts=$this->getDefaultInvoiceTexts();
 		$belegnummer=$this->nextNumber($customer);
 		$prefix=$this->getInvoicePrefix();
+		if ($preis == null){
+			$preis=$this->defaultWage;
+		}
 		$user = $this->open3aUser;		
 		$stmt = $this->conn->prepare('INSERT INTO Auftrag (AdresseID, auftragdatum, kundennummer, UserID, AuftragVorlage, AuftragStammdatenID) VALUES (?,?,?,?,?,?)');
 		$success=$stmt->execute(array($adr_id,time(),$customer,$this->open3aUser,$template,1));
@@ -163,7 +166,8 @@ class open3a {
 				
 				$stmt=$this->conn->prepare('INSERT INTO Posten (name,gebinde,GRLBMID,preis,menge,mwst,artikelnummer,beschreibung,bruttopreis) VALUES (?,?,?,?,?,?,?,?,?)');
 				foreach ($timetrack as $track){
-					$comment=trim(strip_tags($track['comment']));
+					$comment=trim(strip_tags(html_entity_decode($track['comment'],0,'UTF-8')));
+					print $comment;
 					if (strlen($comment)>$maxlen){
 						$pos=strpos($comment, ' ', $maxlen);
 						if ($pos === false){
@@ -179,14 +183,14 @@ class open3a {
 					$end=$track['endstring'];
 					$hours=$track['hours'];
 					$user=$track['uname'];					
-					$task=($track['task']==0)?$short_comment:trim(strip_tags($track['tname']));
+					$task=($track['task']==0)?$short_comment:trim(strip_tags(html_entity_decode($track['tname'],0,'UTF-8')));
 					$brutto=round($preis+($mwst*$preis/100),3);
 					$success=$stmt->execute(array($task,'h',$grlbm_id,$preis,$hours,$mwst,'Timesheet',$comment,$brutto));
 					if (!$success){
 						print_r($stmt->errorInfo());
 						die();
 					}
-				}												
+				}						
 				return true;
 			}
 		}

@@ -202,19 +202,41 @@ if ($action == "add") {
     	
     	$project = new project();
     	$proj = $project->getProject($id);
-    	$desc=$proj['desc'];
-    	$pos=strpos($desc, "Kundennummer");
-    	if ($pos !== false){
-    		$desc=substr($desc,$pos+12);
-    		while (strlen($desc)>0 && !is_numeric(substr($desc,0,1))){
-    			$desc=substr($desc,1);
+    	$desc=$proj['desc'];    	
+    	$knrpos=strpos($desc, "Kundennummer");
+    	if ($knrpos !== false){
+    		$knrdesc=substr($desc,$knrpos+12);
+    		while (strlen($knrdesc)>0 && !is_numeric(substr($knrdesc,0,1))){
+    			$knrdesc=substr($knrdesc,1);
     		}
-    		if (strlen($desc)>0){
+    		if (strlen($knrdesc)>0){
     			$len=0;
-    			while (is_numeric(substr($desc, 0,$len+1))){
+    			while (is_numeric(substr($knrdesc, 0,$len+1))){
     				$len += 1;
     			}
-    			$knr = substr($desc,0,$len);
+    			$knr = substr($knrdesc,0,$len);
+    			
+    			
+    			$pricepos=strpos($desc,"Stundensatz");
+    			$hourly_wage=null;    	
+    			if ($pricepos !== false){
+    				$pricedesc=substr($desc,$pricepos+11);
+    				while (strlen($pricedesc)>0 && !is_numeric(substr($pricedesc,0,1))){
+    					$pricedesc=substr($pricedesc,1);
+    				}
+    				if (strlen($pricedesc)>0){
+    					$len=0;
+    					$char=substr($pricedesc, 0,$len+1);
+    					while ($char=='.' || $char=',' || is_numeric(char)){
+    					  if ($len>=strlen($pricedesc)){
+    							break;
+    						}
+    						$len += 1;
+    						$char=substr($pricedesc, 0,$len+1);
+    					}
+    					$hourly_wage = substr($pricedesc,0,$len);
+    				}
+    			}
     			
     			if (!empty($start) and !empty($end)) {
     				$track = $tracker->getProjectTrack($id, $usr, $taski, $start, $end, false);
@@ -225,9 +247,8 @@ if ($action == "add") {
 	    		
 	    		if (!empty($track)) {
 						
-	    			$open3a = new open3a();
-	    			
-	    			if ($open3a->createBillFor($track,$knr)){
+	    			$open3a = new open3a();	    			
+	    			if ($open3a->createBillFor($track,$knr,$hourly_wage)){
 	    				header('Location: '.$open3a->location());	    				 
 	    			} else {
 	    				$template->assign("errortext", "Fehler beim Anlegen der Rechnung!");
