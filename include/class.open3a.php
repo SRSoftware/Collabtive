@@ -51,13 +51,13 @@ class open3a {
 	}
 	
 	function getDefaultInvoiceTexts(){
-		$stmt = $this->conn->prepare('SELECT KategorieID,text FROM Textbaustein WHERE isRStandard=1');
+		$stmt = $this->conn->prepare('SELECT TextbausteinID,KategorieID,text FROM Textbaustein WHERE isRStandard=1');
 		$res=$stmt->execute();
 		$texts=array();
 		while ($data = $stmt->fetch()){
 			$kat=$data['KategorieID'];
-			$texts[$kat]=$data['text'];
-		}
+			$texts[$kat]=array('tx'=>$data['text'],'id'=>$data['TextbausteinID']);			
+		}		
 		$stmt->closeCursor();
 		return $texts;
 	}
@@ -129,25 +129,25 @@ class open3a {
 	
 	function createBillFor($timetrack,$customer){
 		$template=$this->getTemplate();
-		$adr_id=$this->getAdressForCustomer($customer);
-		
+		$adr_id=$this->getAdressForCustomer($customer);		
 		$texts=$this->getDefaultInvoiceTexts();
 		$belegnummer=$this->nextNumber($customer);
-
-		$stmt=$this->conn->prepare('SELECT * FROM GRLBM');
-		$stmt->execute();
-		while ($data = $stmt->fetch()){
-			print_r($data);
-		}
-		die();
+		$prefix=$this->getInvoicePrefix();
 		$user = $this->open3aUser;		
 		$stmt = $this->conn->prepare('INSERT INTO Auftrag (AdresseID, auftragdatum, kundennummer, UserID, AuftragVorlage, AuftragStammdatenID) VALUES (?,?,?,?,?,?)');
-		$stmt->execute(array($adr_id,time(),$customer,$this->open3aUser,$template,1));
-		if ($res=$stmt->execute()){
+		$success=$stmt->execute(array($adr_id,time(),$customer,$this->open3aUser,$template,1));
+		if ($success){
 			$id=$this->conn->lastInsertId();
-			
-			$stmt = $this->conn->prepare('INSERT INTO GRLBM (AuftragID,datum,isR,nummer,textbausteinOben,textbausteinUnten,zahlungsbedingungen,lieferDatum,prefix,textbausteinObenID,textbausteinUntenID,zahlungsbedingungenID,GRLBMpayedVia)');
-//			$stmt->execute($id,time(),1,$belegnummer,/*TODO*/,'transfer');
+			$stmt->closeCursor();			
+			$stmt = $this->conn->prepare('INSERT INTO GRLBM (AuftragID,datum,isR,nummer,textbausteinOben,textbausteinUnten,zahlungsbedingungen,lieferDatum,prefix,textbausteinObenID,textbausteinUntenID,zahlungsbedingungenID,GRLBMpayedVia) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?)');
+			$success = $stmt->execute(array($id,time(),1,$belegnummer,$texts[2]['tx'],$texts[3]['tx'],$texts[1]['tx'],time(),$prefix,$texts[2]['id'],$texts[3]['id'],$texts[1]['id'],'transfer'));
+			if ($success){
+				print "success!";
+			} else {
+				print_r($stmt->errorInfo());
+			}
+		} else {
+			print_r($stmt->errorInfo());
 		}
 	}
 }
