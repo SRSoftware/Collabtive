@@ -21,24 +21,33 @@ class open3a {
 		$this->open3aUser=$user_id;
 	}
 	
+	function warn($message){
+		if (!isset($this->warnings)){
+			$this->warnings=array();
+		}
+		$warnings[]=$message;
+	}
+	
 	function getTemplate(){
-		$stmt = $this->conn->prepare('SELECT ownTemplate FROM Stammdaten');
-		$res=$stmt->execute();		
+		$stmt = $this->conn->prepare('SELECT ownTemplate FROM Stammdaten WHERE aktiv=1');
+		$res=$stmt->execute();
+		$templ=null;		
 		if ($data = $stmt->fetch()) {
-			$stmt->closeCursor();
-			return $data['ownTemplate'];
+			$templ=$data['ownTemplate'];
 		}
 		$stmt->closeCursor();
+		return $templ;
 	}
 	
 	function getAdressForCustomer($customer_id){
 		$stmt = $this->conn->prepare('SELECT AdresseID FROM Kappendix WHERE kundennummer = ?');
-		$res=$stmt->execute(array($customer_id));		
+		$res=$stmt->execute(array($customer_id));
+		$addr=null;		
 		if ($data = $stmt->fetch()) {
-			$stmt->closeCursor();
-			return $data['AdresseID'];
+			$addr=$data['AdresseID'];
 		}
 		$stmt->closeCursor();
+		return $addr;
 	}
 	
 	function getDefaultInvoiceTexts(){
@@ -53,11 +62,76 @@ class open3a {
 		return $texts;
 	}
 	
+	function getNumberFormat(){
+		$stmt = $this->conn->prepare('SELECT belegNummerFormatR FROM Stammdaten WHERE aktiv=1');
+		$res=$stmt->execute();
+		$format = null;	
+		if ($data = $stmt->fetch()) {
+			$format=$data['belegNummerFormatR'];
+		}		
+		$stmt->closeCursor();
+		return $format;
+	}
+
+	function readNextNumber(){
+		$stmt = $this->conn->prepare('SELECT wert FROM Userdata WHERE name="belegNummerNextR"');
+		$res=$stmt->execute();
+		$num = null;
+		if ($data = $stmt->fetch()) {
+			$num=$data['wert'];
+		}
+		$stmt->closeCursor();
+		return $num;
+	}
+	
+	function getInvoicePrefix(){
+		$stmt = $this->conn->prepare('SELECT prefixR FROM Stammdaten WHERE aktiv=1');
+		$res=$stmt->execute();
+		$prefix = '';
+		if ($data = $stmt->fetch()) {
+			$prefix=$data['prefixR'];
+		}
+		$stmt->closeCursor();
+		return $prefix;
+	}
+	
+	function nextNumber($knr){
+		$format=$this->getNumberFormat();
+		if ($format == null){
+			warn('Number format not set!');
+			return null;
+		}
+		$prefix=$this->getInvoicePrefix();
+		$next=$this->readNextNumber();
+		
+		$replace = array(
+				"{J}" => date("Y"),
+				"{J2}" => date("y"),
+				"{T}" => str_pad(date("z"), 3, "0", STR_PAD_LEFT),
+				"{M}" => date("m"),
+				"{M1}" => date("m") * 1,
+				"{K}" => $knr
+		);
+		foreach($replace AS $k => $v){
+			$format = str_replace($k, $v, $format);
+		}
+		
+		$useNext = $next;
+		preg_match("/\{N:([0-9]+)\}/", $format, $matches);
+		if(isset($matches[1])){
+			$useNext = str_pad($next, $matches[1], "0", STR_PAD_LEFT);
+			$format = str_replace($matches[0], $useNext, $format);
+		}
+		
+		return $prefix.$format;
+	}
+	
 	function createBillFor($timetrack,$customer){
 		$template=$this->getTemplate();
 		$adr_id=$this->getAdressForCustomer($customer);
 		
 		$texts=$this->getDefaultInvoiceTexts();
+		$belegnummer=$this->nextNumber($customer);
 
 		$stmt=$this->conn->prepare('SELECT * FROM GRLBM');
 		$stmt->execute();
@@ -72,7 +146,7 @@ class open3a {
 			$id=$this->conn->lastInsertId();
 			
 			$stmt = $this->conn->prepare('INSERT INTO GRLBM (AuftragID,datum,isR,nummer,textbausteinOben,textbausteinUnten,zahlungsbedingungen,lieferDatum,prefix,textbausteinObenID,textbausteinUntenID,zahlungsbedingungenID,GRLBMpayedVia)');
-			$stmt->execute($id,time(),1,/*TODO*/,'transfer');
+//			$stmt->execute($id,time(),1,/*TODO*/,'transfer');
 		}
 	}
 }
