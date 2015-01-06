@@ -1,6 +1,8 @@
 <?php
 include("init.php");
 if (!isset($_SESSION["userid"])) {
+		include 'config/openid-logins/companies.php';
+		$template->assign('companies',$companies);	
     $template->assign("loginerror", 0);
     $template->display("login.tpl");
     die();
