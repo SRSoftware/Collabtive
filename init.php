@@ -15,7 +15,6 @@ define("CL_VERSION", 2.0);
 define("CL_PUBDATE", "1407880800");
 // uncomment next line for debugging
 // error_reporting(E_ALL || E_STRICT);
-
 // include config file , pagination and global functions
 require(CL_ROOT . "/config/" . CL_CONFIG . "/config.php");
 require(CL_ROOT . "/include/SmartyPaginate.class.php");
@@ -23,9 +22,8 @@ require(CL_ROOT . "/include/SmartyPaginate.class.php");
 require(CL_ROOT . "/include/HTMLPurifier.standalone.php");
 // load init functions
 require(CL_ROOT . "/include/initfunctions.php");
-
 // Start database connection
-// $tdb = new datenbank();
+// Depending on the DB driver, instantiate a PDO object with the necessary credentials.
 switch ($db_driver) {
     case "mysql":
         if (!empty($db_name) and !empty($db_user)) {
@@ -83,17 +81,17 @@ if (isset($_SESSION["userid"])) {
 }
 // get system settings
 if (isset($conn)) {
-	//Set PDO options
-	$conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_WARNING);
-	$conn->setAttribute(PDO::ATTR_EMULATE_PREPARES, false);
-
- 	$mylog = new mylog();
-
-	$set = (object) new settings();
+    // Set PDO options
+    $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_WARNING);
+    $conn->setAttribute(PDO::ATTR_EMULATE_PREPARES, false);
+    // create a global mylog object for loging system events
+    $mylog = new mylog();
+    // get a settings object, and fetch an array containing the system settings
+    $set = (object) new settings();
     $settings = $set->getSettings();
-
+    // define a constant that holds the default dateformat
     define("CL_DATEFORMAT", $settings["dateformat"]);
-
+    // set the default TZ for date etc
     date_default_timezone_set($settings["timezone"]);
     $template->assign("settings", $settings);
 }
@@ -102,15 +100,15 @@ if (isset($conn)) {
 if (isset($settings['template'])) {
     $template->template_dir = CL_ROOT . "/templates/$settings[template]/";
     // $template->tname = $settings["template"];
-} else {
+}else {
     $template->template_dir = CL_ROOT . "/templates/standard/";
     // $template->tname = "standard";
 }
-
+// If no locale is set, get the settings locale or default to english
 if (!isset($locale)) {
     if (isset($settings["locale"])) {
         $locale = $settings['locale'];
-    } else {
+    }else {
         $locale = "en";
     }
     $_SESSION['userlocale'] = $locale;
@@ -138,6 +136,7 @@ $mainclasses = array("desktop" => "desktop",
     "admin" => "admin"
     );
 $template->assign("mainclasses", $mainclasses);
+// get current year and month
 $they = date("Y");
 $them = date("n");
 $template->assign("theM", $them);
