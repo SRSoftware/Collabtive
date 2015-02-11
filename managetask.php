@@ -10,17 +10,17 @@ if (!isset($_SESSION["userid"])) {
       // most probably this is not the best location for this basic auth code. feel free to move it to whereever it should be.
       // in the ideal case, this kind of basic auth should also be available for the RSS feed!
       if (!isset($_SERVER['PHP_AUTH_USER'])) {
-	$msg="Collabtive";
-	if ($action == "ical") {
-	  $msg .=". Also try action=icalshort for alternative display.";
-	}
+	  		$msg="Collabtive";
+				if ($action == "ical") {
+	  			$msg .=". Also try action=icalshort for alternative display.";
+				}
         header('WWW-Authenticate: Basic realm="'.$msg.'"');
         header('HTTP/1.0 401 Unauthorized');
         echo 'Error 401: Not authorized!';
       } else {
-	// try login with given credentials
-	$user = (object) new user();
-	if ($user->login($_SERVER['PHP_AUTH_USER'], $_SERVER['PHP_AUTH_PW'])) {
+			// try login with given credentials
+				$user = (object) new user();
+				if ($user->login($_SERVER['PHP_AUTH_USER'], $_SERVER['PHP_AUTH_PW'])) {
           $loc = $url . "managetask.php?action=" . $action;
           header("Location: $loc");
         } else {
@@ -30,6 +30,8 @@ if (!isset($_SESSION["userid"])) {
       }
       exit;
     } else {
+    	include 'config/openid-logins/companies.php';
+    	$template->assign('companies',$companies);
       $template->assign("loginerror", 0);
       $template->display("login.tpl");
       die();
