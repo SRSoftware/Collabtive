@@ -9,7 +9,7 @@ Voraussetzungen:
   * $db_name ist der Name der open3A-Datenbank auf dem entsprechenden Rechner (momentan wird nur mysql unterstützt)
   * $db_user ist der Name des Datenbankbenutzers, der auf die open3a-Datenbank Zugriff hat.
   * $db_pass ist das zugehörige Passwort für die Datenbank.
-  * $user_id ist die Open3a-interne ID des Benutzers, unter dessen Konto die Rechnunen erstellt werden sollen.
+  * $user_id ist die Open3a-interne ID des Benutzers, unter dessen Konto die Rechnungen erstellt werden sollen.
   * $location ist der Pfad, unter dem die open3a-Installation zu erreichen ist. Das kann entweder ein relativer Pfad ausgehend von Collabtive sein, oder eine absolute URL.
   * $hourly_wage ist der Stundenlohn, der standardmäßig für die exportierten Stundenzettel angesetzt wird (siehe unten).
 * in jedem Projekt, für welches in Open3a Rechnungen erzegt werden sollen, muss in der Projektbeschreibung eine Kundennummer in der Form "Kundennummer: xxxxx" angegeben sein.
