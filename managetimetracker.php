@@ -391,6 +391,46 @@ if ($action == "add") {
     $template->assign("tracker", $track);
     SmartyPaginate::assign($template);
     $template->display("tracker_project.tpl");
+} elseif ($action == 'starteasytracking'){
+    if (!$userpermissions["timetracker"]["add"]) {
+        $template->assign("errortext", "Permission denied.");
+        $template->assign("mode", "error");
+        $template->display("error.tpl");
+        die();
+    }
+
+    $result = $tracker->openTracking($userid, $id, $tid);
+    if ($result === false){
+	echo 'failed';
+    } elseif ($result == 'open track existing'){
+	echo $result;
+    } else {
+	echo 'ok';
+    }
+} elseif ($action == 'finisheasytracking'){
+    if (!$userpermissions["timetracker"]["add"]) {
+        $template->assign("errortext", "Permission denied.");
+        $template->assign("mode", "error");
+        $template->display("error.tpl");
+        die();
+    }
+    if ($id){
+	$track_id=$tracker->finishTracking($userid,$id,$tid);
+	if ($track_id){
+		$loc = 'managetimetracker.php?action=editform&tid='.$track_id.'&id='.$id;
+		header("Location: ".$loc);
+	}
+    }
+} elseif ($action == 'canceleasytracking'){
+    if (!$userpermissions["timetracker"]["add"]) {
+        $template->assign("errortext", "Permission denied.");
+        $template->assign("mode", "error");
+        $template->display("error.tpl");
+        die();
+    }
+    if ($opentrack != 0){
+	   $tracker->cancelTracking($opentrack);
+    }
 }
 
 ?>
