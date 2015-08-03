@@ -257,7 +257,13 @@ if ($action == "add") {
 	    			/* export timetrack as open3a invoice */
 	    			$open3a = new open3a();	    			
 	    			if ($open3a->createBillFor($track,$customer_number,$hourly_wage)){
-	    				header('Location: '.$open3a->location());	    				 
+	    				
+	    				if (isset($_SESSION['openid'])){
+	    					$template->assign('openid',$_SESSION['openid']);
+	    					header('Location: '.$open3a->location().'/openid_login?openid='.$_SESSION['openid']);	    				 
+	    				} else {	    				
+	    					header('Location: '.$open3a->location());
+	    				}	    				 
 	    			} else {
 	    				$template->assign("errortext", "Fehler beim Anlegen der Rechnung!");
 	    				$template->assign("mode", "error");
