@@ -440,10 +440,4 @@ if ($action == "addform") {
     $template->assign("title", $title);
     $template->assign("task", $task);
     $template->display("task.tpl");
-} elseif ($action == "ical") {
-    $mytask = new task();
-    $task = $mytask->getIcal($userid);
-} elseif ($action == "icalshort") {
-    $mytask = new task();
-    $task = $mytask->getIcal($userid,false);
 }
