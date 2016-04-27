@@ -23,6 +23,40 @@
 
 	<h1>{$projectname|truncate:45:"...":true}<span>/ {#timetracker#}</span></h1>
 
+{*Timetracker*}
+{if $userpermissions.timetracker.add}
+<div class="timetrack">
+        <div class="headline">
+                <a href="javascript:void(0);" id="trackerhead_toggle" class="win_block" onclick = "toggleBlock('trackerhead');"></a>
+
+                <!-- Export-block
+                <div class="wintools">
+                        <div class="export-main">
+                                <a class="export"><span>{#export#}</span></a>
+                                <div class="export-in"  style="width:23px;left: -23px;"> {*at one item*}
+                                        <a class="ical" href="managetask.php?action=ical"><span>{#icalexport#}</span></a>
+                                </div>
+                        </div>
+                </div>
+                -->
+
+                <h2>
+                        <a href="managetimetracker.php?action=showproject&amp;id={$project.ID}" title="{#timetracker#}"><img src="./templates/standard/images/symbols/timetracker.png" alt="" />{#timetracker#}</a>
+                </h2>
+        </div>
+
+        <div class="block" id="trackerhead" style = "{$trackerstyle}">
+                <div id = "trackerform" class="addmenue">
+                        {include file="addtimetracker.tpl" }
+                </div>
+                <div class="tablemenue"></div>
+        </div> {*block end*}
+</div> {*timetrack end*}
+
+<div class="content-spacer"></div>
+{/if}
+{*Timetracker End*}
+
 	<div class="timetrack">
 		<div class="headline">
 			<a href="javascript:void(0);" id="acc-tracker_toggle" class="win_block" onclick = "toggleBlock('acc-tracker');"></a>

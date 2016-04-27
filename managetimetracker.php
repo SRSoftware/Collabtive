@@ -386,7 +386,22 @@ if ($action == "add") {
         $projectTrack["count"] = count($projectTrack);
         echo json_encode($projectTrack);
     }
-
+    $pro = new project();
+    $usrs = $pro->getProjectMembers($id, 1000, false);
+    $proj = $pro->getProject($id);
+    $projectname = $proj["name"];
+    $template->assign("projectname", $projectname);
+    $template->assign("users", $usrs);
+    $title = $langfile["timetracker"];
+    $template->assign("title", $title);
+    $template->assign("ptasks", $ptasks);
+    $template->assign("start", $start);
+    $template->assign("end", $end);
+    $template->assign("usr", $usr);
+    $template->assign("task", $taski);
+    $template->assign("tracker", $track);
+    SmartyPaginate::assign($template);
+    $template->display("tracker_project.tpl");
 } elseif ($action == 'starteasytracking'){
     if (!$userpermissions["timetracker"]["add"]) {
         $template->assign("errortext", "Permission denied.");
