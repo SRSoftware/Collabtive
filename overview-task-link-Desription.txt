@@ -1,0 +1,1 @@
+showing the users tasks on the index page instead of the projects

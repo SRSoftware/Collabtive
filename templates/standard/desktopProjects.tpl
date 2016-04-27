@@ -57,7 +57,7 @@
                         <div class="toggle-in">
                                 <span id="desktopprojects_toggle{{ item.ID }}" class="acc-toggle"
                                       onclick="javascript:accord_projects.activate(document.querySelector('#projecthead_content{{$index}}'));"></span>
-                            <a href="manageproject.php?action=showproject&amp;id={{*item.ID}}" title="{{*item.name}}">
+                            <a href="managetask.php?action=showproject&amp;id={{*item.ID}}" title="{{*item.name}}">
                                 {{*item.name}}
                             </a>
                         </div>
