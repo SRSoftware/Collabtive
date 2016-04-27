@@ -6,14 +6,16 @@
 <div class="tasks">
 
 	<div class="infowin_left" style = "display:none;" id = "systemmsg">
-		{if $mode == "edited"}
+		{if $mode == "added"}
+                        <span class="info_in_green"><img src="templates/standard/images/symbols/task.png" alt=""/>{#taskwasadded#}</span>
+		{elseif $mode == "edited"}
 			<span class="info_in_yellow"><img src="templates/standard/img/symbols/tasklist.png" alt=""/>{#tasklistwasedited#}</span>
 		{/if}
 	</div>
 
 	{literal}
 		<script type = "text/javascript">
-			apperar = new Effect.Appear('systemmsg', { duration: 2.0 })
+                        systemMsg('systemmsg');
 		</script>
 	{/literal}
 

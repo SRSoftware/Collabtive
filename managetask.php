@@ -83,7 +83,7 @@ if ($action == "add") {
                     }
                 }
             }
-            $loc = $url . "managetask.php?action=showproject&id=$id&mode=added";
+			$loc = $url . "managetasklist.php?action=showtasklist&id=$id&tlid=$tasklist&mode=added";
             header("Location: $loc");
         } else {
             $template->assign("addtask", 0);
