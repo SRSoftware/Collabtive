@@ -4,11 +4,9 @@ require("./init.php");
 $action = getArrayVal($_GET, "action");
 
 if (!isset($_SESSION["userid"])) {
-
-
-    $template->assign("loginerror", 0);
-    $template->display("login.tpl");
-    die();
+      $template->assign("loginerror", 0);
+      $template->display("login.tpl");
+      die();
 }
 
 $task = (object)new task();

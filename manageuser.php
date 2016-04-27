@@ -175,8 +175,7 @@ if ($action == "loginerror") {
         if (move_uploaded_file($tmp_name, $datei_final)) {
             $avatar = $fname;
         }
-
-        if ($user->edit($userid, $cleanPost["name"], $cleanPost["realname"], $cleanPost["email"], $cleanPost["tel1"], $cleanPost["tel2"], "", $cleanPost["zip"], $cleanPost["gender"], $cleanPost["web"], $cleanPost["address1"], $cleanPost["address2"], $cleanPost["state"], $cleanPost["country"], "", $cleanPost["locale"], $avatar, 0, $openid)) {
+        if ($user->edit($userid, $cleanPost["name"], $cleanPost["realname"], $cleanPost["email"], $cleanPost["tel1"], $cleanPost["tel2"], "", $cleanPost["zip"], $cleanPost["gender"], $cleanPost["web"], $cleanPost["address1"], $cleanPost["address2"], $cleanPost["state"], $cleanPost["country"], "", $cleanPost["locale"], $avatar, 0, $cleanPost['openid'])) {
             if (!empty($cleanPost["oldpass"]) and !empty($cleanPost["newpass"]) and !empty($cleanPost["repeatpass"])) {
                 $user->editpass($userid, $cleanPost["oldpass"], $cleanPost["newpass"], $cleanPost["repeatpass"]);
             }
@@ -184,7 +183,7 @@ if ($action == "loginerror") {
             header("Location: $loc");
         }
     } else {
-        if ($user->edit($userid, $cleanPost["name"], $cleanPost["realname"], $cleanPost["email"], $cleanPost["tel1"], $cleanPost["tel2"], $cleanPost["company"], $cleanPost["zip"], $cleanPost["gender"], $cleanPost["web"], $cleanPost["address1"], $cleanPost["address2"], $cleanPost["state"], $cleanPost["country"], "", $cleanPost["locale"], "", 0)) {
+		if ($user->edit($userid, $cleanPost["name"], $cleanPost["realname"], $cleanPost["email"], $cleanPost["tel1"], $cleanPost["tel2"], $cleanPost["company"], $cleanPost["zip"], $cleanPost["gender"], $cleanPost["web"], $cleanPost["address1"], $cleanPost["address2"], $cleanPost["state"], $cleanPost["country"], "", $cleanPost["locale"], "", 0, $cleanPost['openid'])) {
             if (isset($cleanPost["oldpass"]) and isset($cleanPost["newpass"]) and isset($cleanPost["repeatpass"])) {
                 $user->editpass($userid, $cleanPost["oldpass"], $cleanPost["newpass"], $cleanPost["repeatpass"]);
             }
