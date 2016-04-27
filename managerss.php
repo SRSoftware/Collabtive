@@ -5,37 +5,47 @@ $rss = new UniversalFeedCreator();
 $rss->useCached();
 
 $action = getArrayVal($_GET, "action");
-$user = getArrayVal($_GET, "user");
 $project = getArrayVal($_GET, "project");
-$username = $_SESSION["username"];
 error_reporting(0);
 
-if (!empty($settings["rssuser"]) and !empty($settings["rsspass"]))
-{
-    if (!isset($_SERVER['PHP_AUTH_USER']))
-    {
-        header('WWW-Authenticate: Basic realm="Collabtive"');
-        header('HTTP/1.0 401 Unauthorized');
-        $errtxt = $langfile["nopermission"];
-        $noperm = $langfile["accessdenied"];
-        $template->assign("errortext", "$errtxt<br>$noperm");
-        $template->display("error.tpl");
-        die();
-    }
+$userid = null;
 
-    $authuser = $_SERVER['PHP_AUTH_USER'];
-    $authpw = $_SERVER['PHP_AUTH_PW'];
-    if ($authuser != $settings["rssuser"] or $authpw != $settings["rsspass"])
-    {
-        unset($_SERVER['PHP_AUTH_USER']);
-        unset($_SERVER['PHP_AUTH_PW']);
-        $errtxt = $langfile["nopermission"];
-        $noperm = $langfile["accessdenied"];
-        $template->assign("errortext", "$errtxt<br>$noperm");
-        $template->display("error.tpl");
-        die();
-    }
+if (isset($_SESSION['userid'])){
+	// User is logged in, so use his id
+	$userid = $_SESSION['userid'];
+} elseif (isset($_SERVER['PHP_AUTH_USER'])){ // credentials submitted
+	$authuser = $_SERVER['PHP_AUTH_USER'];
+	$authpw = $_SERVER['PHP_AUTH_PW'];
+	
+	if (!empty($settings["rssuser"]) && !empty($settings["rsspass"]) && $authuser == $settings["rssuser"] && $authpw == $settings["rsspass"]) {
+		// login data fits global rss user data
+		// use the user id passed by GET request
+		$userid = getArrayVal($_GET, "user"); // this rather dangerous as we can request any users data here!
+	} else {
+		// given data do not match rss-user in  settings or no rss-user defined
+		$user = (object) new user();
+		if ($user->login($authuser,$authpw)){ // user login successfull
+			$userid = $_SESSION['userid'];				
+		} else { // credentials given but don't match
+			unset($_SERVER['PHP_AUTH_USER']);
+			unset($_SERVER['PHP_AUTH_PW']);
+			$errtxt = $langfile["nopermission"];
+			$noperm = $langfile["accessdenied"];
+			$template->assign("errortext", "$errtxt<br>$noperm");
+			$template->display("error.tpl");
+			die();
+		}
+	}
+} else { // not logged in and no credentials given:
+	header('WWW-Authenticate: Basic realm="Collabtive"');
+	header('HTTP/1.0 401 Unauthorized');
+	$errtxt = $langfile["nopermission"];
+	$noperm = $langfile["accessdenied"];
+	$template->assign("errortext", "$errtxt<br>$noperm");
+	$template->display("error.tpl");
+	die();
 }
+
 if ($action == "rss-tasks")
 {
     $thetask = new task();
@@ -52,11 +62,11 @@ if ($action == "rss-tasks")
     $rss->syndicationURL = $loc;
 
     $project = new project();
-    $myprojects = $project->getMyProjects($user);
+    $myprojects = $project->getMyProjects($userid);
     $tasks = array();
     foreach($myprojects as $proj)
     {
-        $task = $thetask->getAllMyProjectTasks($proj["ID"], $user);
+        $task = $thetask->getAllMyProjectTasks($proj["ID"], $userid);
 
         if (!empty($task))
         {
@@ -87,11 +97,11 @@ if ($action == "rss-tasks")
     }
     // valid format strings are: RSS0.91, RSS1.0, RSS2.0, PIE0.1 (deprecated),
     // MBOX, OPML, ATOM, ATOM0.3, HTML, JS
-    echo $rss->saveFeed("RSS2.0", CL_ROOT . "/files/" . CL_CONFIG . "/ics/feedtask-$user.xml");
+    echo $rss->saveFeed("RSS2.0", CL_ROOT . "/files/" . CL_CONFIG . "/ics/feedtask-$userid.xml");
 } elseif ($action == "mymsgs-rss")
 {
     $tproject = new project();
-    $myprojects = $tproject->getMyProjects($user);
+    $myprojects = $tproject->getMyProjects($userid);
 
     $msg = new message();
     $messages = array();
@@ -138,7 +148,7 @@ if ($action == "rss-tasks")
 
         $rss->addItem($item);
     }
-    echo $rss->saveFeed("RSS2.0", CL_ROOT . "/files/" . CL_CONFIG . "/ics/mymsgs-$user.xml");
+    echo $rss->saveFeed("RSS2.0", CL_ROOT . "/files/" . CL_CONFIG . "/ics/mymsgs-$userid.xml");
 }
 elseif($action == "projectmessages")
 {
