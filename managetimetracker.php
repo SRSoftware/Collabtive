@@ -181,6 +181,92 @@ if ($action == "add") {
             echo "ok";
         }
     }
+} elseif ($action == "open3Atime") {
+    	if (!chkproject($userid, $id)) {
+    		$errtxt = $langfile["notyourproject"];
+    		$noperm = $langfile["accessdenied"];
+    		$template->assign("errortext", "$errtxt<br>$noperm");
+    		$template->assign("mode", "error");
+    		$template->display("error.tpl");
+    		die();
+    	}
+    	
+    	/* get project data */
+    	$project = new project();
+    	$proj = $project->getProject($id);
+    	$project_description=$proj['desc'];
+
+    	/* grep for customer number */
+    	$customer_number_pos=strpos($project_description, "Kundennummer");
+    	if ($customer_number_pos !== false){
+    		$customer_number_description=substr($project_description,$customer_number_pos+12);
+    		while (strlen($customer_number_description)>0 && !is_numeric(substr($customer_number_description,0,1))){
+    			$customer_number_description=substr($customer_number_description,1);
+    		}
+    		if (strlen($customer_number_description)>0){
+    			$len=0;
+    			while (is_numeric(substr($customer_number_description, 0,$len+1))){
+    				if ($len>=strlen($customer_number_description)){
+    					break;
+    				}
+    				$len += 1;
+    			}
+    			$customer_number = substr($customer_number_description,0,$len);
+    			
+    			/* grep for wage per hour */
+    			$wage_pos=strpos($project_description,"Stundensatz");
+    			$hourly_wage=null;    	
+    			if ($wage_pos !== false){
+    				$wage_description=substr($project_description,$wage_pos+11);
+    				while (strlen($wage_description)>0 && !is_numeric(substr($wage_description,0,1))){
+    					$wage_description=substr($wage_description,1);
+    				}
+    				if (strlen($wage_description)>0){
+    					$len=0;
+    					$char=substr($wage_description, 0,$len+1);
+    					while ($char=='.' || $char=',' || is_numeric(char)){
+    					  if ($len>=strlen($wage_description)){
+    							break;
+    						}
+    						$len += 1;
+    						$char=substr($wage_description, 0,$len+1);
+    					}
+    					$hourly_wage = substr($wage_description,0,$len);
+    				}
+    			}
+    			
+    			/* get project track */
+    			if (!empty($start) and !empty($end)) {
+    				$track = $tracker->getProjectTrack($id, $usr, $taski, $start, $end, false);
+    			} else {
+    				$track = $tracker->getProjectTrack($id, $usr , $taski, 0, 0, false);
+    			}
+    			 
+	    		
+	    		if (!empty($track)) {						
+	    			/* export timetrack as open3a invoice */
+	    			$open3a = new open3a();	    			
+	    			if ($open3a->createBillFor($track,$customer_number,$hourly_wage)){
+	    				
+	    				if (isset($_SESSION['openid'])){
+	    					$template->assign('openid',$_SESSION['openid']);
+	    					header('Location: '.$open3a->location().'/openid_login?openid='.$_SESSION['openid']);	    				 
+	    				} else {	    				
+	    					header('Location: '.$open3a->location());
+	    				}	    				 
+	    			} else {
+	    				$template->assign("errortext", "Fehler beim Anlegen der Rechnung!");
+	    				$template->assign("mode", "error");
+	    				$template->display("error.tpl");
+	    				die();
+	    			}
+	    		}
+    		}
+    	}
+    	$template->assign("errortext", "Keine Kundennummer in Projektbeschreibung gefunden.");
+    	$template->assign("mode", "error");
+    	$template->display("error.tpl");
+    	die();    	
 } elseif ($action == "projectxls") {
     if (!chkproject($userid, $id)) {
         $errtxt = $langfile["notyourproject"];

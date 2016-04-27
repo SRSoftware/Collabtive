@@ -219,10 +219,18 @@
 }
 
 .export-main a.excel {
-	background-position: -69px 0;	
+  background-position: -69px 0; 
 }
 
 .export-main a.excel:hover {
+  background-position: -69px -31px; 
+}
+
+.export-main a.open3a {
+	background-position: -69px 0;	
+}
+
+.export-main a.open3a:hover {
 	background-position: -69px -31px;	
 }
 

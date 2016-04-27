@@ -1,0 +1,9 @@
+<?php
+$db_host = 'localhost';
+$db_name = '';
+$db_user = '';
+$db_pass = '';
+$user_id = 0; // enter the number of the user, to which the imports shall be assigned.
+$location = '../open3a'; // absolute or relative location of open3a installation
+$hourly_wage = 15; // default hourly wage for invoices
+?>
