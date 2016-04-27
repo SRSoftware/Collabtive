@@ -86,7 +86,11 @@ if (isset($_SESSION["userid"])) {
     $template->assign("userpermissions", $userpermissions);
     $template->assign('opentrack',$opentrack);
     $template->assign("loggedin", 1);
-}else {
+    if (isset($_SESSION['openid'])){
+    	$template->assign('openid',$_SESSION['openid']);
+    }
+    $mylog = new mylog();
+} else {
     $template->assign("loggedin", 0);
     $userpermissions = array();
     $settings = array();
